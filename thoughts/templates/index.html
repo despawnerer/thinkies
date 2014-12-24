@@ -11,6 +11,7 @@
   <script src="{% static 'components/external/webcomponentsjs/webcomponents.js' %}"></script>
 
   <link rel="import" href="{% static 'components/external/font-roboto/roboto.html' %}">
+  <link rel="import" href="{% static 'components/external/paper-button/paper-button.html' %}">
 
   <link rel="import" href="{% static 'components/post-card.html' %}">
 
@@ -28,8 +29,13 @@
         {% for thought in object_list %}
           <post-card>
             <h2>{{ thought.movie }}</h2>
-            <date>{{ thought.created_at|naturaltime }}</date>
+            <movie-controls>
+              <a href="{{ thought.movie.imdb_url }}" target="_blank" rel="nofollow">
+                <paper-button class="imdb-button">IMDb</paper-button>
+              </a>
+            </movie-controls>
             <p>{{ thought }}</p>
+            <date>{{ thought.created_at|naturaltime }}</date>
           </post-card>
         {% endfor %}
 

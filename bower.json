@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "polymer": "Polymer/polymer#~0.5.2",
-    "font-roboto": "Polymer/font-roboto#~0.5.2"
+    "font-roboto": "Polymer/font-roboto#~0.5.2",
+    "paper-button": "Polymer/paper-button#~0.5.2"
   }
 }

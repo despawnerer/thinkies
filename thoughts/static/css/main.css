@@ -24,3 +24,20 @@ html,body {
 #thought-list {
   margin: 0 -20px;
 }
+
+.imdb-button {
+  background: #F9EA93;
+  color: #333310;
+  text-transform: none;
+  font-family: "Impact";
+  min-width: 0;
+}
+
+.imdb-button:hover {
+  background: #f5de50;
+}
+
+.imdb-button::shadow .button-content {
+  padding: 0;
+  padding: 4px 7px;
+}
