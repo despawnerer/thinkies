@@ -21,9 +21,60 @@ html,body {
     }
 }
 
+/* thought list */
+
 #thought-list {
     margin: 0 -20px;
 }
+
+.thought-card {
+    display: block;
+    position: relative;
+    padding: 20px;
+    width: 400px;
+    font-size: 1rem;
+    font-weight: 300;
+    border-radius: 5px;
+}
+
+.thought-card {
+    box-shadow: 2px
+}
+
+@media (max-width: 481px) {
+    .thought-card {
+        width: auto;
+    }
+}
+
+.card-header {
+    margin-bottom: 10px;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 300;
+}
+
+.card-header img {
+    width: 70px;
+    border-radius: 50%;
+    margin: 10px;
+}
+
+.card-meta {
+    font-size: 0.8rem;
+    color: gray;
+    margin: 1rem 0;
+}
+
+.movie-controls {
+    margin: 1rem 0 0 -0.29em;
+}
+
+
+/* buttons */
 
 .imdb-button {
     background: #F9EA93;
