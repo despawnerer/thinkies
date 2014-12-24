@@ -1,0 +1,11 @@
+{% load humanize %}
+<post-card>
+    <h2>{{ thought.movie }}</h2>
+    <movie-controls>
+        <a href="{{ thought.movie.imdb_url }}" target="_blank" rel="nofollow">
+            <paper-button class="imdb-button">IMDb</paper-button>
+        </a>
+    </movie-controls>
+    <p>{{ thought }}</p>
+    <date>{{ thought.created_at|naturaltime }}</date>
+</post-card>
