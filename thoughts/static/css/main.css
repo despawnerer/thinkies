@@ -1,0 +1,26 @@
+html,body {
+  height: 100%;
+  margin: 0;
+  background: white;
+  font-family: 'RobotoDraft', sans-serif;
+}
+
+#main-container {
+  margin: 40px 20px;
+}
+
+@media (min-width: 441px) {
+  #main-container {
+    width: 400px;
+  }
+}
+
+@media (min-width: 921px) {
+  #main-container {
+    width: 840px;
+  }
+}
+
+#thought-list {
+  margin: 0 -20px;
+}

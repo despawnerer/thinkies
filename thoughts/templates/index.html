@@ -1,0 +1,41 @@
+{% load staticfiles humanize %}
+<!doctype html>
+<html>
+
+<head>
+
+  <title>thoughts</title>
+
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <script src="{% static 'components/external/webcomponentsjs/webcomponents.js' %}"></script>
+
+  <link rel="import" href="{% static 'components/external/font-roboto/roboto.html' %}">
+
+  <link rel="import" href="{% static 'components/post-card.html' %}">
+
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+</head>
+
+<body unresolved fullbleed layout vertical center>
+    <div id="main-container">
+
+      <h1>thoughts</h1>
+
+      <div id="thought-list" layout horizontal wrap>
+
+        {% for thought in object_list %}
+          <post-card>
+            <h2>{{ thought.movie }}</h2>
+            <date>{{ thought.created_at|naturaltime }}</date>
+            <p>{{ thought }}</p>
+          </post-card>
+        {% endfor %}
+
+      </div>
+
+    </div>
+</body>
+
+</html>

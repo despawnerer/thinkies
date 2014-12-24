@@ -1,0 +1,4 @@
+*.pyc
+__pycache__
+thoughts/static/components/external
+db.sqlite3
