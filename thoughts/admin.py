@@ -4,7 +4,7 @@ from .models import Movie, Thought
 
 
 class MovieAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('title', 'year', 'imdb_url')
 
 admin.site.register(Movie, MovieAdmin)
 
