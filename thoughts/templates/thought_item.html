@@ -4,11 +4,13 @@
         <content select="img"></content>
         <div>
             <h2>{{ thought.movie }}</h2>
+            {% if thought.movie.imdb_url %}
             <div class="movie-controls">
                 <a href="{{ thought.movie.imdb_url }}" target="_blank" rel="nofollow">
                     <paper-button class="imdb-button">IMDb</paper-button>
                 </a>
             </div>
+            {% endif %}
         </div>
     </div>
     <p>{{ thought }}</p>
