@@ -19,6 +19,16 @@
     <div id="main-container">
         <h1>thoughts</h1>
 
+        {% if user.is_authenticated %}
+            {% for backend in backends.backends %}
+                {% if backend in backends.not_associated %}
+                    <a href="{% url 'social:begin' backend=backend %}">Подключить {{ backend }}</a>
+                {% else %}
+                    <a href="{% url 'social:disconnect' backend=backend %}">Отключить {{ backend }}</a>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
         <div id="thought-list" layout horizontal wrap>
             {% for thought in object_list %}
                 {% include 'thought_item.html' with thought=thought only %}

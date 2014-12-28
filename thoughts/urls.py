@@ -4,7 +4,9 @@ from django.contrib import admin
 from .views import Index
 
 urlpatterns = [
-    url(r'^$', Index.as_view()),
-
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^auth/', include('social.apps.django_app.urls', namespace='social')),
+
+    url(r'^$', Index.as_view()),
 ]
