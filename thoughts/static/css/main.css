@@ -20,6 +20,13 @@ html,body {
         width: 840px;
     }
 }
+
+@media (min-width: 1401px) {
+    #main-container {
+        width: 1280px;
+    }
+}
+
 #main-toolbar span {
     font-size: 0.9rem;
     padding: 0 10px;
