@@ -27,7 +27,6 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -74,7 +73,6 @@ DATABASES = {
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth',
-    'django.contrib.auth.backends.ModelBackend',
 )
 
 SOCIAL_AUTH_TWITTER_KEY = 'ByaSI7W75mLRTcWCjd5gHRn7O'
