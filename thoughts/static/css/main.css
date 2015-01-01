@@ -20,6 +20,38 @@ html,body {
         width: 840px;
     }
 }
+#main-toolbar span {
+    font-size: 0.9rem;
+    padding: 0 10px;
+    color: silver;
+}
+
+#main-toolbar paper-button {
+    font-size: 0.9rem;
+    text-transform: none;
+    min-width: 0;
+}
+
+#main-toolbar paper-button::shadow .button-content {
+    padding: 4px 10px 4px 7px;
+}
+
+#main-toolbar paper-button.button-iconless::shadow .button-content {
+    padding: 8px 10px;
+}
+
+#main-toolbar paper-button core-icon {
+    margin-right: 4px;
+}
+
+.button-connect { color: white; }
+.button-connect.facebook { background: #3b5998; }
+.button-connect.twitter { background: #55acee; }
+
+.button-disconnect.facebook { color: #3b5998; }
+.button-disconnect.twitter { color: #55acee; }
+
+.button-leave { color: gray; }
 
 /* thought list */
 

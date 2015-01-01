@@ -4,6 +4,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#~0.5.2",
     "font-roboto": "Polymer/font-roboto#~0.5.2",
-    "paper-button": "Polymer/paper-button#~0.5.2"
+    "paper-button": "Polymer/paper-button#~0.5.2",
+    "core-icons": "Polymer/core-icons#~0.5.2",
+    "core-icon": "Polymer/core-icon#~0.5.2"
   }
 }
