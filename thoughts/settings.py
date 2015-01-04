@@ -109,3 +109,5 @@ STATIC_URL = '/static/'
 
 GEOIP_PATH = os.path.join(DATA_DIR, 'geoip')
 GEOIP_CITY = 'GeoLite2-City.mmdb'
+
+WIKIDATA_DIR = os.path.join(DATA_DIR, 'wikidata')
