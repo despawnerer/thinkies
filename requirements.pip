@@ -2,3 +2,5 @@ Django==1.7.1
 python-social-auth==0.2.1
 requests==2.5.1
 requests-oauthlib==0.4.2
+geoip2==2.1.0
+django-ipware==0.1.0

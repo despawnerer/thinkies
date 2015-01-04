@@ -90,3 +90,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+
+
+GEOIP_PATH = os.path.join(BASE_DIR, 'thoughts', 'data')
+GEOIP_CITY = 'GeoLite2-City.mmdb'
