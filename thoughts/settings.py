@@ -9,6 +9,9 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 import os
+from django.utils.translation import ugettext_lazy as _
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 
@@ -80,7 +83,11 @@ SOCIAL_AUTH_TWITTER_KEY = 'ByaSI7W75mLRTcWCjd5gHRn7O'
 SOCIAL_AUTH_TWITTER_SECRET = '0gZSlM7c8sYa0zZx3upgbf1wYraQyQpqLxPEPY5b3cdLTvkn3T'
 
 
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'en'
+LANGUAGES = (
+    ('en', _('English')),
+    ('ru', _('Russian')),
+)
 
 TIME_ZONE = 'UTC'
 
