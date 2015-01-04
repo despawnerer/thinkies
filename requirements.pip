@@ -4,3 +4,5 @@ requests==2.5.1
 requests-oauthlib==0.4.2
 geoip2==2.1.0
 django-ipware==0.1.0
+lxml==3.4.1
+funcy==1.3
