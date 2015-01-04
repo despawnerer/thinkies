@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+DATA_DIR = os.path.join(BASE_DIR, 'data')
 
 
 # Quick-start development settings - unsuitable for production
@@ -92,5 +93,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-GEOIP_PATH = os.path.join(BASE_DIR, 'thoughts', 'data')
+GEOIP_PATH = os.path.join(DATA_DIR, 'geoip')
 GEOIP_CITY = 'GeoLite2-City.mmdb'
