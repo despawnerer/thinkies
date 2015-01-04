@@ -37,8 +37,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+
     'social.apps.django_app.default',
+
     'thoughts',
+    'movies',
 )
 
 MIDDLEWARE_CLASSES = (
