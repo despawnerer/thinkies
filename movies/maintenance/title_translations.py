@@ -37,7 +37,7 @@ def update():
                 TitleTranslation.objects.update_or_create(
                     movie_id=imdb_id,
                     language=language, defaults={
-                        'title': title
+                        'title': title[:255]
                     })
                 total += 1
         logger.info("Updated %d titles" % total)
