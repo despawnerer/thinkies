@@ -3,8 +3,8 @@ import dateutil.parser
 from funcy import cached_property, notnone
 
 
-def load_items(io):
-    for json in ijson.items(io, 'item'):
+def load_items(f):
+    for json in ijson.items(f, 'item'):
         yield Item(json)
 
 
