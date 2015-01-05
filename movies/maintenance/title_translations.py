@@ -27,7 +27,7 @@ PROPERTY_VALUE_FILM = {'entity-type': ITEM_TYPE, 'numeric-id': Q_ID_FILM}
 def update():
     filename = get_latest_archive_filename()
     io = get_io_for_filename(filename)
-    f = io(filename)
+    f = io(filename, 'rb')
 
     logger.info("Beginning update from %s" % filename)
     total = 0
