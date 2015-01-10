@@ -1,6 +1,9 @@
+from funcy import cached_property
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django.utils.translation import get_language
 
 
 class Movie(models.Model):
@@ -16,6 +19,14 @@ class Movie(models.Model):
 
     def get_absolute_url(self):
         return reverse('movies:movie', kwargs={'pk': self.pk})
+
+    @property
+    def translated_title(self):
+        return self.titles_by_language.get(get_language()) or self.title
+
+    @cached_property
+    def titles_by_language(self):
+        return {t.language: t.title for t in self.title_translations.all()}
 
 
 class TitleTranslation(models.Model):

@@ -19,15 +19,7 @@ class MovieIndex(indexes.SearchIndex, indexes.Indexable):
         return self.get_model().objects.prefetch_related('title_translations')
 
     def prepare_title_en(self, obj):
-        return self._get_title_translation(obj, 'en')
+        return obj.titles_by_language.get('en') or ''
 
     def prepare_title_ru(self, obj):
-        return self._get_title_translation(obj, 'ru')
-
-    def _get_title_translation(self, obj, language):
-        translations = obj.title_translations.all()
-        for trans in translations:
-            if trans.language == language:
-                return trans.title
-        else:
-            return ''
+        return obj.titles_by_language.get('ru') or ''
