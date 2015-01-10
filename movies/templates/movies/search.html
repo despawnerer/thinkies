@@ -5,7 +5,7 @@
     {% if movie_list %}
         <ul>
             {% for movie in movie_list %}
-            <li>{{ movie }}</li>
+            <li><a href="{{ movie.get_absolute_url }}">{{ movie }}</a></li>
             {% endfor %}
         </ul>
     {% else %}
