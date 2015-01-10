@@ -40,18 +40,24 @@ class SearchView(ListView):
         if not query:
             return None
 
-        results = omdb.search(query)
+        response = omdb.request(s=query, type='movie')
+        results = omdb.models.Search(response.json())
+
         imdb_ids = map(attrgetter('imdb_id'), results)
         movies_in_db = Movie.objects.filter(imdb_id__in=imdb_ids)
         movies_by_imdb_id = group_by(attrgetter('imdb_id'), movies_in_db)
         movies = map(
             lambda result: (movies_by_imdb_id[result.imdb_id][0]
                             if result.imdb_id in movies_by_imdb_id
-                            else self.build_movie_from_omdb_result(result)),
+                            else self.create_movie_from_omdb_result(result)),
             results)
 
         return list(movies)
 
-    def build_movie_from_omdb_result(self, result):
-        return Movie(title=result.title, imdb_id=result.imdb_id,
-                     year=result.year)
+    def create_movie_from_omdb_result(self, result):
+        movie, created = Movie.objects.get_or_create(
+            imdb_id=result.imdb_id, defaults={
+                'title': result.title,
+                'year': result.year,
+            })
+        return movie
