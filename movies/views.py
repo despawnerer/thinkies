@@ -21,7 +21,7 @@ class SearchView(ListView):
         movies_in_db = Movie.objects.filter(imdb_id__in=imdb_ids)
         movies_by_imdb_id = group_by(attrgetter('imdb_id'), movies_in_db)
         movies = map(
-            lambda result: (movies_by_imdb_id[result.imdb_id]
+            lambda result: (movies_by_imdb_id[result.imdb_id][0]
                             if result.imdb_id in movies_by_imdb_id
                             else self.build_movie_from_omdb_result(result)),
             results)
