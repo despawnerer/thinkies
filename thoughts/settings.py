@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
+    'haystack',
     'social.apps.django_app.default',
 
     'thoughts',
@@ -111,6 +112,15 @@ GEOIP_PATH = os.path.join(DATA_DIR, 'geoip')
 GEOIP_CITY = 'GeoLite2-City.mmdb'
 
 WIKIDATA_DIR = os.path.join(DATA_DIR, 'wikidata')
+
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'thoughts.search.engines.ConfigurableElasticEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'thoughts',
+    },
+}
 
 
 LOGGING = {
