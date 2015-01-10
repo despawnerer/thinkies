@@ -1,0 +1,49 @@
+<link rel="import" href="./external/core-menu/core-menu.html">
+<link rel="import" href="./external/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="./external/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="./external/paper-item/paper-item.html">
+
+
+<polymer-element name="language-dropdown-menu" attributes="action current next csrf">
+<template>
+    <style>
+        .dropdown-menu {
+            border: 0;
+        }
+
+        .dropdown {
+            margin: 0;
+        }
+
+        .menu {
+            margin: 0;
+        }
+    </style>
+
+    <paper-dropdown-menu class="dropdown-menu">
+        <paper-dropdown class="dropdown" duration="150">
+            <core-menu class="menu" valueattr="value" selected="{{ current }}" on-core-activate="{{ languageSelected }}">
+                <content select="paper-item"></content>
+            </core-menu>
+        </paper-dropdown>
+    </paper-dropdown-menu>
+
+    <form action="{{ action }}" method="post" id="form" hidden>
+        <input type="hidden" name="next" value="{{ next }}" />
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf }}">
+        <input type="hidden" name="language" value="{{ current }}"/>
+    </form>
+</template>
+
+<script>
+(function() {
+    Polymer({
+        languageSelected: function(event, detail) {
+            var value = detail.item.getAttribute('value');
+            this.$.form.language.setAttribute('value', value);
+            this.$.form.submit();
+        }
+    });
+})();
+</script>
+</polymer-element>
