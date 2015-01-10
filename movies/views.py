@@ -59,7 +59,11 @@ class SearchView(ListView):
         return results[:25]
 
     def get_omdb_results(self, query):
-        response = omdb.request(s=query, type='movie')
+        try:
+            response = omdb.request(s=query, type='movie')
+        except:
+            return []
+
         results = omdb.models.Search(response.json())
         return results
 
