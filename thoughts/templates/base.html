@@ -20,7 +20,10 @@
 <body unresolved fullbleed layout vertical center>
     <div id="main-container">
         <div id="main-toolbar" layout horizontal center>
-            <h1 flex>thoughts</h1>
+            <div flex layout horizontal>
+                <h1>thoughts</h1>
+                {% include 'includes/language_selector.html' %}
+            </div>
             {% include 'includes/user_zone.html' %}
         </div>
 
