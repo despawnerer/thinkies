@@ -51,12 +51,12 @@ class SearchView(ListView):
 
     def get_our_results(self, query):
         language = get_language()
-        params = {
-            'text': query,
-            'title_%s' % language: query
-        }
-        results = SearchQuerySet().filter_or(**params)
-        return results[:25]
+        translated_param = {'title_%s' % language: query}
+        results = (
+            SearchQuerySet()
+            .filter_or(text=query)
+            .filter_or(**translated_param))
+        return results[:20]
 
     def get_omdb_results(self, query):
         try:
