@@ -1,5 +1,3 @@
-from urllib.parse import urlencode
-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
@@ -17,16 +15,7 @@ class Movie(models.Model):
         return _("{title} ({year})").format(title=self.title, year=self.year)
 
     def get_absolute_url(self):
-        if self.pk:
-            return reverse('movies:movie', kwargs={'pk': self.pk})
-        else:
-            url = reverse('movies:go')
-            params = {
-                'imdb_id': self.imdb_id,
-                'title': self.title,
-                'year': self.year,
-            }
-            return '{url}?{query}'.format(url=url, query=urlencode(params))
+        return reverse('movies:movie', kwargs={'pk': self.pk})
 
 
 class TitleTranslation(models.Model):

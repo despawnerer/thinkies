@@ -2,7 +2,6 @@ import omdb
 from operator import attrgetter
 from funcy import group_by
 
-from django.views.generic.base import RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
@@ -13,22 +12,6 @@ class MovieView(DetailView):
     model = Movie
     context_object_name = 'movie'
     template_name = 'movies/item.html'
-
-
-class GoView(RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        imdb_id = self.request.GET.get('imdb_id')
-        if not imdb_id:
-            return '/'
-
-        year = self.request.GET.get('year')
-        title = self.request.GET.get('title')
-
-        movie, created = Movie.objects.get_or_create(imdb_id=imdb_id, defaults={
-            'year': year,
-            'title': title
-        })
-        return movie.get_absolute_url()
 
 
 class SearchView(ListView):
