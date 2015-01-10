@@ -11,8 +11,7 @@ class Movie(models.Model):
     poster = models.ImageField(null=True)
 
     def __str__(self):
-        return _("%(title)s (%(year)d)") % {
-            'title': self.title, 'year': self.year}
+        return _("{title} ({year})").format(title=self.title, year=self.year)
 
 
 class TitleTranslation(models.Model):
