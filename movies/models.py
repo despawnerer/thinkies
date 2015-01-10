@@ -15,7 +15,8 @@ class Movie(models.Model):
     poster = models.ImageField(null=True)
 
     def __str__(self):
-        return _("{title} ({year})").format(title=self.title, year=self.year)
+        return _("{title} ({year})").format(title=self.translated_title,
+                                            year=self.year)
 
     def get_absolute_url(self):
         return reverse('movies:movie', kwargs={'pk': self.pk})
