@@ -1,0 +1,30 @@
+{% load staticfiles i18n %}<!doctype html>
+<html>
+<head>
+    <title>thoughts</title>
+
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="{% static 'components/external/webcomponentsjs/webcomponents.js' %}"></script>
+
+    <link rel="import" href="{% static 'components/external/font-roboto/roboto.html' %}">
+    <link rel="import" href="{% static 'components/external/core-icon/core-icon.html' %}">
+    <link rel="import" href="{% static 'components/external/core-icons/social-icons.html' %}">
+    <link rel="import" href="{% static 'components/external/paper-button/paper-button.html' %}">
+
+    <link rel="import" href="{% static 'components/post-card.html' %}">
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+
+<body unresolved fullbleed layout vertical center>
+    <div id="main-container">
+        <div id="main-toolbar" layout horizontal center>
+            <h1 flex>thoughts</h1>
+            {% include 'includes/user_zone.html' %}
+        </div>
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
