@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+    {% if movie_list %}
+        <ul>
+            {% for movie in movie_list %}
+            <li>{{ movie }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>
+        {% trans "No movies found" %}
+        </p>
+    {% endif %}
+{% endblock %}
