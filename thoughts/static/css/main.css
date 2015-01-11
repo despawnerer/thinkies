@@ -74,6 +74,8 @@ html,body {
 
 .button-leave { color: gray; }
 
+#main-toolbar :last-child paper-button { margin-right: 0; }
+
 /* thought list */
 
 #thought-list {
