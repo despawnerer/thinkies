@@ -39,7 +39,7 @@ class TitleTranslation(models.Model):
     movie = models.ForeignKey(Movie, to_field='imdb_id', db_constraint=False,
                               db_column='imdb_id', on_delete=models.DO_NOTHING,
                               related_name='title_translations')
-    language = models.CharField(max_length=10)
+    language = models.CharField(max_length=36)
     title = models.CharField(max_length=255)
 
     class Meta:
