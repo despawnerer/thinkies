@@ -1,7 +1,5 @@
 import omdb
 from operator import attrgetter
-from funcy import group_by
-from itertools import chain
 
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -27,29 +25,22 @@ class SearchView(ListView):
         if not query:
             return None
 
-        our_results = self.get_our_results(query)
-        our_imdb_ids = set(map(attrgetter('imdb_id'), our_results))
+        omdb_results = self.get_omdb_search_results(query)
+        omdb_imdb_ids = map(attrgetter('imdb_id'), omdb_results)
+        omdb_existing_imdb_ids = (
+            Movie.objects.filter(imdb_id__in=omdb_imdb_ids)
+            .values_list('imdb_id', flat=True))
+        for result in omdb_results:
+            if result.imdb_id not in omdb_existing_imdb_ids:
+                self.create_movie_from_omdb_result(result)
 
-        omdb_results = self.get_omdb_results(query)
-        omdb_results = list(filter(
-            lambda result: result.imdb_id not in our_imdb_ids, omdb_results))
-        omdb_imdb_ids = set(map(attrgetter('imdb_id'), omdb_results))
+        results = self.get_search_results(query)
+        imdb_ids = map(attrgetter('imdb_id'), results)
+        movies = Movie.objects.filter(imdb_id__in=imdb_ids)
+        movies_by_imdb_id = {m.imdb_id: m for m in movies}
+        return [movies_by_imdb_id[result.imdb_id] for result in results]
 
-        imdb_ids = our_imdb_ids | omdb_imdb_ids
-        movies_in_db = Movie.objects.filter(imdb_id__in=imdb_ids)
-        movies_by_imdb_id = group_by(attrgetter('imdb_id'), movies_in_db)
-
-        our_movies = map(
-            lambda result: movies_by_imdb_id[result.imdb_id][0], our_results)
-        omdb_movies = map(
-            lambda result: (movies_by_imdb_id[result.imdb_id][0]
-                            if result.imdb_id in movies_by_imdb_id
-                            else self.create_movie_from_omdb_result(result)),
-            omdb_results)
-
-        return chain(our_movies, omdb_movies)
-
-    def get_our_results(self, query):
+    def get_search_results(self, query):
         language = get_language()
         translated_param = {'title_%s' % language: query}
         results = (
@@ -58,14 +49,13 @@ class SearchView(ListView):
             .filter_or(**translated_param))
         return results[:20]
 
-    def get_omdb_results(self, query):
+    def get_omdb_search_results(self, query):
         try:
             response = omdb.request(s=query, type='movie')
         except:
             return []
 
-        results = omdb.models.Search(response.json())
-        return results
+        return omdb.models.Search(response.json())
 
     def create_movie_from_omdb_result(self, result):
         movie, created = Movie.objects.get_or_create(

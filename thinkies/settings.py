@@ -122,6 +122,7 @@ WIKIDATA_MONGO_HOST = 'localhost'
 WIKIDATA_MONGO_DATABASE = 'test'
 
 
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'thinkies.search.engines.ConfigurableElasticEngine',
