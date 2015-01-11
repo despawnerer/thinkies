@@ -44,8 +44,8 @@ def update():
         with transaction.atomic():
             for imdb_id, language, title in chunk:
                 TitleTranslation.objects.update_or_create(
-                    movie_id=imdb_id,
-                    language=language, defaults={
+                    movie_id=imdb_id, language=language,
+                    defaults={
                         'title': title[:255]
                     })
                 total += 1
@@ -93,7 +93,7 @@ def get_movie_items():
             PROPERTY_VALUE_FILM, PROPERTY_VALUE_SHORT_FILM,
             PROPERTY_VALUE_ANIMATED_FILM]},
         'claims.P345.mainsnak.datavalue.value': {'$exists': True},
-    }, fields=['labels', 'claims.P345.mainsnak.datavalue'])
+    }, fields=['labels', 'sitelinks', 'claims.P345.mainsnak.datavalue'])
 
     logger.info("Total movie items: %d", results.count())
 
