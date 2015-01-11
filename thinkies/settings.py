@@ -141,6 +141,9 @@ LOGGING = {
         'simple': {
             'format': '%(levelname)s %(message)s'
         },
+        'simple_with_time': {
+            'format': '%(levelname)s %(asctime)s %(message)s'
+        }
     },
     'handlers': {
         'null': {
@@ -150,7 +153,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'formatter': 'simple_with_time'
         },
         'mail_admins': {
             'level': 'ERROR',
