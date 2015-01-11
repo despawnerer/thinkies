@@ -21,7 +21,7 @@ class GetMovieTitlesForItemTestCase(TestCase):
             data = json.load(f)
         self.item = Item(data)
 
-    def test_titles(self):
+    def test_titles_get_picked_up_from_sitelinks(self):
         expected_titles = set([
             ('fr', 'Whiplash'),
             ('en', 'Whiplash'),
