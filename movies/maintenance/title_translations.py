@@ -19,12 +19,18 @@ P_IMDB_ID = 'P345'
 Q_ID_FILM = 11424
 Q_ID_SHORT_FILM = 24862
 Q_ID_ANIMATED_FILM = 202866
+Q_ID_TV_FILM = 506240
+Q_ID_STOP_MOTION = 18089587
 
 PROPERTY_VALUE_FILM = {'entity-type': TYPE_ITEM, 'numeric-id': Q_ID_FILM}
 PROPERTY_VALUE_SHORT_FILM = {'entity-type': TYPE_ITEM,
                              'numeric-id': Q_ID_SHORT_FILM}
 PROPERTY_VALUE_ANIMATED_FILM = {'entity-type': TYPE_ITEM,
                                 'numeric-id': Q_ID_ANIMATED_FILM}
+PROPERTY_VALUE_TV_FILM = {'entity-type': TYPE_ITEM,
+                          'numeric-id': Q_ID_TV_FILM}
+PROPERTY_VALUE_STOP_MOTION = {'entity-type': TYPE_ITEM,
+                              'numeric-id': Q_ID_STOP_MOTION}
 
 
 clean_title_re = re.compile(
@@ -90,8 +96,12 @@ def get_movie_items():
 
     results = collection.find({
         'claims.P31.mainsnak.datavalue.value': {'$in': [
-            PROPERTY_VALUE_FILM, PROPERTY_VALUE_SHORT_FILM,
-            PROPERTY_VALUE_ANIMATED_FILM]},
+            PROPERTY_VALUE_FILM,
+            PROPERTY_VALUE_SHORT_FILM,
+            PROPERTY_VALUE_ANIMATED_FILM,
+            PROPERTY_VALUE_TV_FILM,
+            PROPERTY_VALUE_STOP_MOTION,
+        ]},
         'claims.P345.mainsnak.datavalue.value': {'$exists': True},
     }, fields=['labels', 'sitelinks', 'claims.P345.mainsnak.datavalue'])
 
