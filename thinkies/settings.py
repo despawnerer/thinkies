@@ -118,6 +118,8 @@ GEOIP_PATH = os.path.join(DATA_DIR, 'geoip')
 GEOIP_CITY = 'GeoLite2-City.mmdb'
 
 WIKIDATA_DIR = os.path.join(DATA_DIR, 'wikidata')
+WIKIDATA_MONGO_HOST = 'localhost'
+WIKIDATA_MONGO_DATABASE = 'test'
 
 
 HAYSTACK_CONNECTIONS = {

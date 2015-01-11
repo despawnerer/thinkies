@@ -1,11 +1,19 @@
-import ijson.backends.yajl2 as ijson
-import dateutil.parser
+import dateutil
+from pymongo import MongoClient
 from funcy import cached_property, notnone
 
+from django.conf import settings
 
-def load_items(f):
-    for json in ijson.items(f, 'item'):
-        yield Item(json)
+
+def get_collection():
+    client = MongoClient(
+        host=getattr(settings, 'WIKIDATA_MONGO_HOST', None),
+        port=getattr(settings, 'WIKIDATA_MONGO_PORT', None))
+    db = client[settings.WIKIDATA_MONGO_DATABASE]
+    collection = db['wikidata']
+    collection.ensure_index('id', unique=True)
+    collection.ensure_index('claims.P31.mainsnak.datavalue.value')
+    return collection
 
 
 class Item:
