@@ -1,4 +1,5 @@
 import logging
+import re
 from funcy import chunks
 
 from django.db import transaction
@@ -26,10 +27,20 @@ PROPERTY_VALUE_ANIMATED_FILM = {'entity-type': TYPE_ITEM,
                                 'numeric-id': Q_ID_ANIMATED_FILM}
 
 
+clean_title_re = re.compile(
+    r' \((?:'
+    r'(?:film|фильм)'
+    r'|'
+    r'(?:\d{4}.{0,2}(?:film|фильм))'
+    r'|'
+    r'(?:(?:film|фильм).{0,2}\d{4})'
+    r')\)$')
+
+
 def update():
     logger.info("Beginning update")
     total = 0
-    for chunk in chunks(1000, get_movie_titles()):
+    for chunk in chunks(1000, get_all_movie_titles()):
         with transaction.atomic():
             for imdb_id, language, title in chunk:
                 TitleTranslation.objects.update_or_create(
@@ -42,11 +53,36 @@ def update():
     logger.info("Finished")
 
 
-def get_movie_titles():
+def get_all_movie_titles():
     for item in get_movie_items():
         imdb_id = item.properties[P_IMDB_ID][0]
-        for language, title in item.labels.items():
+        for language, title in get_movie_titles_from_item(item):
             yield imdb_id, language, title
+
+
+def get_movie_titles_from_item(item):
+    for language, title in item.labels.items():
+        yield language, clean_title(title)
+
+    # even if there are no properly translated titles for this movie,
+    # there might still be an appropriately-titled wiki page
+    for site, title in item.sitelinks.items():
+        if not site.endswith('wiki'):
+            continue
+
+        language = site[:-4]
+        if language in item.labels:
+            continue
+
+        yield language, clean_title(title)
+
+
+def clean_title(title):
+    title = title.strip()
+    match = clean_title_re.search(title)
+    if match:
+        title = title[:match.start()] + title[match.end():]
+    return title.strip()
 
 
 def get_movie_items():

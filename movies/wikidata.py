@@ -36,6 +36,13 @@ class Item:
             for language, json in label_jsons.items()}
 
     @cached_property
+    def sitelinks(self):
+        sitelink_jsons = self.json.get('sitelinks') or {}
+        return {
+            site: json['title']
+            for site, json in sitelink_jsons.items()}
+
+    @cached_property
     def properties(self):
         statement_jsons = self.json.get('claims') or {}
         return ItemProperties(statement_jsons)
