@@ -1,4 +1,4 @@
-thoughts
+thinkies
 ========
 
 Thing-reviewing site.

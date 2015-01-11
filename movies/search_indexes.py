@@ -1,6 +1,6 @@
 from haystack import indexes
 
-from thoughts.search.fields import CharField
+from thinkies.search.fields import CharField
 
 from .models import Movie, TitleTranslation
 

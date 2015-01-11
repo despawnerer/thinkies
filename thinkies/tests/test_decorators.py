@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.views.generic.base import View
 from django.core.exceptions import ImproperlyConfigured
 
-from thoughts.decorators import view_decorator, ajax_only
+from thinkies.decorators import view_decorator, ajax_only
 
 
 class ViewDecoratorTestCase(TestCase):

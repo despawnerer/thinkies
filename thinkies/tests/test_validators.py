@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
-from thoughts.validators import validate_imdb_url
+from thinkies.validators import validate_imdb_url
 
 
 class ImdbURLValidatorTestCase(TestCase):

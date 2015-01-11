@@ -1,5 +1,5 @@
 """
-Django settings for thoughts project.
+Django settings for thinkies project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -41,7 +41,7 @@ INSTALLED_APPS = (
     'haystack',
     'social.apps.django_app.default',
 
-    'thoughts',
+    'thinkies',
     'movies',
 )
 
@@ -69,9 +69,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'social.apps.django_app.context_processors.backends',
 )
 
-ROOT_URLCONF = 'thoughts.urls'
+ROOT_URLCONF = 'thinkies.urls'
 
-WSGI_APPLICATION = 'thoughts.wsgi.application'
+WSGI_APPLICATION = 'thinkies.wsgi.application'
 
 DATABASES = {
     'default': {
@@ -121,9 +121,9 @@ WIKIDATA_DIR = os.path.join(DATA_DIR, 'wikidata')
 
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'thoughts.search.engines.ConfigurableElasticEngine',
+        'ENGINE': 'thinkies.search.engines.ConfigurableElasticEngine',
         'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'thoughts',
+        'INDEX_NAME': 'thinkies',
     },
 }
 
