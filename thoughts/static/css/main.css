@@ -45,6 +45,26 @@ html,body {
     margin-right: 4px;
 }
 
+#main-toolbar paper-button.button-yo-dawg::shadow .button-content {
+    padding: 0;
+}
+
+#main-toolbar .button-yo-dawg button {
+    padding: 3px 10px 4px 7px;
+    display: inline;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    font-size: inherit;
+    color: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+#main-toolbar .button-yo-dawg.button-iconless button {
+    padding: 7px 10px 8px 10px;
+}
+
 .button-connect { color: white; }
 .button-connect.facebook { background: #3b5998; }
 .button-connect.twitter { background: #55acee; }

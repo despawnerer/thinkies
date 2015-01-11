@@ -14,7 +14,7 @@
             <form action="{% url 'social:disconnect' backend=backend %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ request.path }}"/>
-                <paper-button class="button-disconnect button-iconless {{ backend }}">
+                <paper-button class="button-disconnect button-iconless button-yo-dawg {{ backend }}">
                     <button>
                     {% blocktrans with backend=backend %}disconnect {{ backend }}{% endblocktrans %}
                     </button>
@@ -40,4 +40,3 @@
         </a>
     {% endfor %}
 {% endif %}
-</div>
