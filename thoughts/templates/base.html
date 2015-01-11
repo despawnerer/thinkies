@@ -1,7 +1,7 @@
 {% load staticfiles i18n %}<!doctype html>
 <html>
 <head>
-    <title>thoughts</title>
+    <title>{% block title %}thinkies{% endblock %}</title>
 
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
@@ -19,9 +19,13 @@
 <body unresolved fullbleed layout vertical center>
     <div id="main-container">
         <div id="main-toolbar" layout horizontal center>
-            <h1>thoughts</h1>
-            <div flex>{% include 'includes/language_chooser.html' %}</div>
-            {% include 'includes/user_zone.html' %}
+            <div id="logo-area" flex>
+                <h1 style="display: inline;">thinkies</h1>
+                {% include 'includes/language_chooser.html' %}
+            </div>
+            <div id="user-area" layout horizontal center>
+                {% include 'includes/user_area.html' %}
+            </div>
         </div>
 
         {% block content %}{% endblock %}
