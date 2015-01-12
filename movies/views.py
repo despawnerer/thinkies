@@ -4,10 +4,11 @@ import langdetect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.utils.translation import get_language
+from django.db.models import Prefetch
 
 from haystack.query import SearchQuerySet
 
-from .models import Movie
+from .models import Movie, TitleTranslation
 from .consts import SEARCHABLE_LANGUAGES
 
 
@@ -28,7 +29,13 @@ class SearchView(ListView):
 
         results = self.get_search_results(query)
         imdb_ids = map(attrgetter('imdb_id'), results)
-        movies = Movie.objects.filter(imdb_id__in=imdb_ids)
+        prefetch = Prefetch(
+            'title_translations',
+            queryset=TitleTranslation.objects.filter(language=get_language()))
+        movies = (
+            Movie.objects
+            .filter(imdb_id__in=imdb_ids)
+            .prefetch_related(prefetch))
         movies_by_imdb_id = {m.imdb_id: m for m in movies}
         return [movies_by_imdb_id[result.imdb_id] for result in results]
 
