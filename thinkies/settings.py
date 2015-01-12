@@ -121,8 +121,9 @@ WIKIDATA_DIR = os.path.join(DATA_DIR, 'wikidata')
 WIKIDATA_MONGO_HOST = 'localhost'
 WIKIDATA_MONGO_DATABASE = 'test'
 
+OMDB_DATA_DIR = os.path.join(DATA_DIR, 'omdb')
 
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'thinkies.search.engines.ConfigurableElasticEngine',
