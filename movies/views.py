@@ -1,4 +1,5 @@
 from operator import attrgetter
+import langdetect
 
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -7,6 +8,7 @@ from django.utils.translation import get_language
 from haystack.query import SearchQuerySet
 
 from .models import Movie
+from .consts import SEARCHABLE_LANGUAGES
 
 
 class MovieView(DetailView):
@@ -31,10 +33,13 @@ class SearchView(ListView):
         return [movies_by_imdb_id[result.imdb_id] for result in results]
 
     def get_search_results(self, query):
-        language = get_language()
-        translated_param = {'title_%s' % language: query}
-        results = (
-            SearchQuerySet()
-            .filter_or(text=query)
-            .filter_or(**translated_param))
-        return results[:20]
+        language_list = {
+            get_language(),
+            langdetect.detect(query),
+        }
+        sqs = SearchQuerySet().filter_or(text=query)
+        for language in language_list:
+            if language in SEARCHABLE_LANGUAGES:
+                param = {'title_%s' % language: query}
+                sqs = sqs.filter_or(**param)
+        return sqs[:20]
