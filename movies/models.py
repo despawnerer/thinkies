@@ -7,12 +7,18 @@ from django.utils.translation import get_language
 
 
 class Movie(models.Model):
-    imdb_id = models.CharField(max_length=50, unique=True)
-    imdb_rating = models.FloatField(null=True)
     title = models.CharField(max_length=255)
     year = models.IntegerField()
-    country = models.CharField(max_length=255)
+    mpaa_rating = models.CharField(max_length=24)
+    release_date = models.DateField(null=True)
     poster = models.ImageField(null=True)
+
+    imdb_id = models.CharField(max_length=50, unique=True)
+    imdb_rating = models.FloatField(null=True)
+    imdb_votes = models.IntegerField(null=True)
+
+    last_data_update = models.DateTimeField(null=True)
+    last_rating_update = models.DateTimeField(null=True)
 
     def __str__(self):
         return _("{title} ({year})").format(title=self.translated_title,
