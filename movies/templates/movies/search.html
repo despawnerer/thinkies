@@ -7,7 +7,10 @@
             {% for movie in movie_list %}
             <li>
                 <a href="{{ movie.get_absolute_url }}">{{ movie }}</a>
-                {% if movie.imdb_rating %}{{ movie.imdb_rating }}{% endif %}
+                {% if movie.imdb_rating %}
+                    {{ movie.imdb_rating }}
+                    {% if movie.imdb_votes %} ({{ movie.imdb_votes }}){% endif %}
+                {% endif %}
             </li>
             {% endfor %}
         </ul>
