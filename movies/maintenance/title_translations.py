@@ -18,19 +18,20 @@ P_IMDB_ID = 'P345'
 
 Q_ID_FILM = 11424
 Q_ID_SHORT_FILM = 24862
-Q_ID_ANIMATED_FILM = 202866
+Q_ID_FEATURE_FILM = 24869
+Q_ID_DOCUMENTARY_FILM = 93204
 Q_ID_TV_FILM = 506240
+Q_ID_ANIMATED_FILM = 202866
 Q_ID_STOP_MOTION = 18089587
 
-PROPERTY_VALUE_FILM = {'entity-type': TYPE_ITEM, 'numeric-id': Q_ID_FILM}
-PROPERTY_VALUE_SHORT_FILM = {'entity-type': TYPE_ITEM,
-                             'numeric-id': Q_ID_SHORT_FILM}
-PROPERTY_VALUE_ANIMATED_FILM = {'entity-type': TYPE_ITEM,
-                                'numeric-id': Q_ID_ANIMATED_FILM}
-PROPERTY_VALUE_TV_FILM = {'entity-type': TYPE_ITEM,
-                          'numeric-id': Q_ID_TV_FILM}
-PROPERTY_VALUE_STOP_MOTION = {'entity-type': TYPE_ITEM,
-                              'numeric-id': Q_ID_STOP_MOTION}
+FILM_TYPE_Q_IDS = [Q_ID_FILM, Q_ID_FEATURE_FILM, Q_ID_SHORT_FILM,
+                   Q_ID_DOCUMENTARY_FILM, Q_ID_TV_FILM, Q_ID_ANIMATED_FILM,
+                   Q_ID_STOP_MOTION]
+
+FILM_TYPE_REFERENCES = [
+    {'entity-type': TYPE_ITEM, 'numeric-id': id_}
+    for id_ in FILM_TYPE_Q_IDS
+]
 
 
 clean_title_re = re.compile(
@@ -95,13 +96,7 @@ def get_movie_items():
     collection = wikidata.get_collection()
 
     results = collection.find({
-        'claims.P31.mainsnak.datavalue.value': {'$in': [
-            PROPERTY_VALUE_FILM,
-            PROPERTY_VALUE_SHORT_FILM,
-            PROPERTY_VALUE_ANIMATED_FILM,
-            PROPERTY_VALUE_TV_FILM,
-            PROPERTY_VALUE_STOP_MOTION,
-        ]},
+        'claims.P31.mainsnak.datavalue.value': {'$in': FILM_TYPE_REFERENCES},
         'claims.P345.mainsnak.datavalue.value': {'$exists': True},
     }, fields=['labels', 'sitelinks', 'claims.P345.mainsnak.datavalue'])
 
