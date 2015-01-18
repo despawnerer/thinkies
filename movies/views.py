@@ -15,8 +15,15 @@ from .consts import SEARCHABLE_LANGUAGES
 
 class MovieView(DetailView):
     model = Movie
-    context_object_name = 'movie'
     template_name = 'movies/item.html'
+
+    def get_context_data(self, **kwargs):
+        context = {
+            'movie': self.object,
+            'tip_list': self.object.tips.all(),
+        }
+        context.update(kwargs)
+        return context
 
 
 class SearchView(ListView):
