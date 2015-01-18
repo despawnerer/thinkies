@@ -1,5 +1,6 @@
 from operator import attrgetter
-import langdetect
+from langdetect import detect as detect_language
+from langdetect.lang_detect_exception import LangDetectException
 
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -40,12 +41,16 @@ class SearchView(ListView):
         return [movies_by_imdb_id[result.imdb_id] for result in results]
 
     def get_search_results(self, query):
-        language_list = {
-            get_language(),
-            langdetect.detect(query),
-        }
+        language_set = {get_language()}
+
+        try:
+            language_set.add(detect_language(query))
+        except LangDetectException:
+            # TODO: log these?
+            pass
+
         sqs = SearchQuerySet().filter_or(text=query)
-        for language in language_list:
+        for language in language_set:
             if language in SEARCHABLE_LANGUAGES:
                 param = {'title_%s' % language: query}
                 sqs = sqs.filter_or(**param)
