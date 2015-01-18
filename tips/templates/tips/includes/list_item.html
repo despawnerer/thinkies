@@ -1,0 +1,9 @@
+{% load i18n %}
+<li>
+    <div class="tip-meta">
+        {% blocktrans with author=tip.author url=tip.get_absolute_url date=tip.creation_date %}{{ author }} on <a href="{{ url }}">{{ date }}</a>{% endblocktrans %}
+    </div>
+    <p>
+        {{ tip.text|linebreaksbr }}
+    </p>
+</li>

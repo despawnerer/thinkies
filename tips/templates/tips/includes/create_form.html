@@ -1,0 +1,17 @@
+{% load i18n %}
+<form action="{% url 'tips:create' %}" method="post">
+    {% csrf_token %}
+    <div>
+        <input type="hidden" name="movie" value="{{ movie.pk }}"/>
+        <textarea name="text" placeholder="{% trans "Tell people what you thought" %}"></textarea>
+    </div>
+    <div>
+        <button>
+            {% if user.is_authenticated %}
+                {% trans "Publish" %}
+            {% else %}
+                {% trans "Log in and publish" %}
+            {% endif %}
+        </button>
+    </div>
+</form>

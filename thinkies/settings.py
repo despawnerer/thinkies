@@ -44,6 +44,7 @@ INSTALLED_APPS = (
 
     'thinkies',
     'movies',
+    'tips',
 )
 
 MIDDLEWARE_CLASSES = (
