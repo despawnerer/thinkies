@@ -27,8 +27,12 @@ def update():
                     create_theatrical_day(
                         item.imdb_id, country, city, this_date)
                 else:
+                    theaters = grabber.get_theaters_for_movie(item)
                     parsed_movie, created = ParsedMovie.objects.get_or_create(
-                        source_id=item.mid, defaults={'title': item.title})
+                        source_id=item.mid, defaults={
+                            'title': item.title,
+                            'additional_data': ', '.join(theaters)
+                        })
                     if parsed_movie.movie_id:
                         create_theatrical_day(
                             parsed_movie.movie_id, country, city, this_date)
