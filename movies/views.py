@@ -1,6 +1,7 @@
 from operator import attrgetter
 from langdetect import detect as detect_language
 from langdetect.lang_detect_exception import LangDetectException
+from funcy import first
 
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -9,7 +10,7 @@ from django.db.models import Prefetch
 
 from haystack.query import SearchQuerySet
 
-from .models import Movie, TitleTranslation
+from .models import Movie, TitleTranslation, ParsedMovie
 from .consts import SEARCHABLE_LANGUAGES
 
 
@@ -62,3 +63,39 @@ class SearchView(ListView):
                 param = {'title_%s' % language: query}
                 sqs = sqs.filter_or(**param)
         return sqs[:20]
+
+
+class ParsedMoviesView(ListView):
+    model = ParsedMovie
+    template_name = 'movies/parsed_movies.html'
+    context_object_name = 'parsed_movie_list'
+
+    def get_queryset(self):
+        parsed_movie_list = (
+            ParsedMovie.objects
+            .select_related('movie')
+            .order_by('-id'))
+
+        for parsed_movie in parsed_movie_list:
+            if not parsed_movie.is_rejected and not parsed_movie.movie_id:
+                query = self.sanitize_title(parsed_movie.title)
+                parsed_movie.suggestion = self.get_suggestion(query)
+
+        return parsed_movie_list
+
+    def get_suggestion(self, query):
+        sqs = SearchQuerySet().filter_or(text=query)
+        for language in SEARCHABLE_LANGUAGES:
+            param = {'title_%s' % language: query}
+            sqs = sqs.filter_or(**param)
+
+        try:
+            result = sqs[0]
+            return Movie.objects.get(imdb_id=result.imdb_id)
+        except IndexError:
+            return None
+
+    def sanitize_title(self, title):
+        if title.endswith(' 3D'):
+            return title[:-4]
+        return title
