@@ -16,6 +16,8 @@ def get_collection():
     return collection
 
 
+# data classes
+
 class Item:
     def __init__(self, json):
         self.json = json
@@ -34,6 +36,13 @@ class Item:
         return {
             language: json['value']
             for language, json in label_jsons.items()}
+
+    @cached_property
+    def descriptions(self):
+        description_jsons = self.json.get('descriptions')
+        return {
+            language: json['value']
+            for language, json in description_jsons.items()}
 
     @cached_property
     def sitelinks(self):
@@ -80,7 +89,7 @@ class ItemProperties:
 
         if type_ == 'time':
             date_string = value['time']
-            # cut off the first character 'cause it's a sign
+            # the first character is the sign
             first_dash_index = date_string[1:].index('-')
             year = int(date_string[:first_dash_index])
             if 0 < year < 9999:

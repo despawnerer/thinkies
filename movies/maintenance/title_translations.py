@@ -4,8 +4,9 @@ from funcy import chunks
 
 from django.db import transaction
 
+from sources import wikidata
+
 from ..models import TitleTranslation
-from .. import wikidata
 
 
 logger = logging.getLogger(__name__)

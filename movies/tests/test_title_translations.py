@@ -8,7 +8,7 @@ from movies.maintenance.title_translations import (
     clean_title,
 )
 
-from movies.wikidata import Item
+from sources.wikidata import Item
 
 
 TEST_ROOT = os.path.dirname(os.path.realpath(__file__))

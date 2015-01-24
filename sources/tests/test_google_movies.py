@@ -1,7 +1,7 @@
 from unittest import TestCase
+from funcy import first
 
-from scraping.sources import GoogleMovies
-from scraping.utils import first
+from sources.google_movies import GoogleMovies
 
 
 TOTAL_MOVIES_COUNT_THRESHOLD = 5  # arbitrary

@@ -1,12 +1,10 @@
-from urllib.parse import urljoin, urlencode, urlsplit
-from funcy import cached_property, collecting
+from urllib.parse import urljoin, urlencode, urlsplit, parse_qs
+from funcy import cached_property, collecting, first
 from collections import namedtuple
 from operator import methodcaller
 
 from lxml import html
 from requests import Session
-
-from ..utils import first, get_param_from_url
 
 
 class GoogleMovies:
@@ -94,3 +92,9 @@ def imdb_id_from_google_movies_url(url):
     imdb_url = get_param_from_url(url, 'q')
     imdb_path = urlsplit(imdb_url).path
     return imdb_path.strip('/')[len('title/'):]
+
+
+def get_param_from_url(url, param):
+    query_string = urlsplit(url).query
+    params = parse_qs(query_string)
+    return params.get(param)[0]
