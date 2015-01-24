@@ -9,5 +9,7 @@ urlpatterns = [
         'social.apps.django_app.urls', namespace='social')),
 
     url(r'^movies/', include('movies.urls', namespace='movies')),
-    url(r'^tips/', include('tips.urls', namespace='tips'))
+    url(r'^tips/', include('tips.urls', namespace='tips')),
+
+    url(r'^api/', include('api.urls', namespace='api')),
 ]

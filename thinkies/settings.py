@@ -41,10 +41,12 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'haystack',
     'social.apps.django_app.default',
+    'rest_framework',
 
     'thinkies',
     'movies',
     'tips',
+    'api',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -131,6 +133,11 @@ HAYSTACK_CONNECTIONS = {
         'URL': 'http://127.0.0.1:9200/',
         'INDEX_NAME': 'thinkies',
     },
+}
+
+
+REST_FRAMEWORK = {
+    'PAGINATE_BY': 10
 }
 
 
