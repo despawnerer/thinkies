@@ -8,8 +8,10 @@ Requirements
 ------------
 
 * python 3.4
-* bower
-* virtualenv
+* postgresql 9
+* elasticsearch 1.3
+* mongodb
+* bower (through nodejs)
 
 
 Setting up or upgrading
