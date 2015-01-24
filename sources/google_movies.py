@@ -23,9 +23,8 @@ class GoogleMovies:
 
     def get_theaters_for_movie(self, movie):
         divs = self.xpath('//div[@class="theater"]'
-                          '[//div[@class="movie"]//div[@class="name"]'
-                          '/a[.="%s"]]'
-                          % movie.title)
+                          '[.//a[contains(@href,"mid=%s")]]'
+                          % movie.mid)
         return set(map(self._build_theater_from_div, divs))
 
     def xpath(self, *args):
@@ -61,9 +60,16 @@ class GoogleMovies:
         return Movie(title, mid, imdb_id)
 
     def _build_theater_from_div(self, div):
-        title_link = first(div.xpath(
-            'div[@class="desc"]/h2[@class="name"]/a'))
-        return title_link.text
+        h2 = first(div.xpath('div[@class="desc"]/h2[@class="name"]'))
+        if h2 is not None:
+            title_link = first(h2.xpath('a'))
+            if title_link is not None:
+                return title_link.text
+            else:
+                return h2.text
+
+        raise ValueError(
+            "Movies can't exist without theaters. Something's wrong.")
 
 
 # data classes
