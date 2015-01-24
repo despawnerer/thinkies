@@ -1,7 +1,7 @@
 thinkies
 ========
 
-Thing-reviewing site.
+Microreviewing app
 
 
 Requirements
