@@ -35,13 +35,14 @@ FILM_TYPE_REFERENCES = [
 ]
 
 
+# TODO: support more languages here
 clean_title_re = re.compile(
     r' \((?:'
-    r'(?:film|(?:мульт)?фильм)'
+    r'(?:film|фильм|мультфильм)'
     r'|'
-    r'(?:\d{4}.{0,2}(?:film|(?:мульт)?фильм))'
+    r'(?:\d{4}.+(?:film|фильм|мультфильм))'
     r'|'
-    r'(?:(?:film|(?:мульт)?фильм).{0,2}\d{4})'
+    r'(?:(?:film|фильм|мультфильм).{0,2}\d{4})'
     r')\)$')
 
 
@@ -69,20 +70,21 @@ def get_all_movie_titles():
 
 
 def get_movie_titles_from_item(item):
-    for language, title in item.labels.items():
-        yield language, clean_title(title)
-
-    # even if there are no properly translated titles for this movie,
-    # there might still be an appropriately-titled wiki page
+    # wikipedia page titles are preferred over wikidata labels
+    # cause they tend to represent the 'popular' title of the movie
+    # much better, even though they often need significant cleanup
+    used_languages = []
     for site, title in item.sitelinks.items():
         if not site.endswith('wiki'):
             continue
 
         language = site[:-4]
-        if language in item.labels:
-            continue
-
         yield language, clean_title(title)
+        used_languages.append(language)
+
+    for language, title in item.labels.items():
+        if language not in used_languages:
+            yield language, clean_title(title)
 
 
 def clean_title(title):

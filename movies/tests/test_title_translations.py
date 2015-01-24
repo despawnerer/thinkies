@@ -26,17 +26,17 @@ class GetMovieTitlesForItemTestCase(TestCase):
             ('fr', 'Whiplash'),
             ('en', 'Whiplash'),
             ('it', 'Whiplash'),
-            ('ko', '위플래쉬'),
-            ('es', 'Whiplash'),
+            ('ko', '위플래쉬 (영화)'),
+            ('es', 'Whiplash (película de 2014)'),
             ('zh-hk', '鼓動真我'),
-            ('hr', 'Ritam ludila'),
+            ('hr', 'Ritam ludila (2014.)'),
             ('nl', 'Whiplash'),
             ('zh', '爆裂鼓手'),
-            ('fi', 'Whiplash (elokuva)'),  # eh, TODO
+            ('fi', 'Whiplash (elokuva)'),
             ('ru', 'Одержимость')
         ])
         titles = set(get_movie_titles_from_item(self.item))
-        self.assertEqual(expected_titles, titles)
+        self.assertSetEqual(titles, expected_titles)
 
 
 class CleanTitleTestCase(TestCase):
@@ -52,6 +52,18 @@ class CleanTitleTestCase(TestCase):
         expected_title = 'Whiplash'
         for title in original_titles:
             self.assertEqual(clean_title(title), expected_title)
+
+    def test_english_with_country(self):
+        original_title = 'Frozen (2010 American film)'
+        expected_title = 'Frozen'
+        self.assertEqual(clean_title(original_title), expected_title)
+
+    def test_english_false_negatives(self):
+        titles_that_need_no_modification = (
+            'Small Medium Large (Fits All Sizes)',
+        )
+        for title in titles_that_need_no_modification:
+            self.assertEqual(clean_title(title), title)
 
     def test_russian(self):
         original_titles = [
