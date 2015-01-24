@@ -49,12 +49,23 @@ class Movie(models.Model):
         return {t.language: t.title for t in self.title_translations.all()}
 
 
+class TheatricalDay(models.Model):
+    movie = models.ForeignKey(Movie, to_field='imdb_id', db_constraint=False,
+                              db_column='imdb_id', on_delete=models.DO_NOTHING,
+                              related_name='theatrical_days')
+    country = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    date = models.DateField()
+
+    class Meta:
+        unique_together = ('movie', 'country', 'city', 'date')
+
+
 class TitleTranslation(models.Model):
     """
     Holds a translated title for a movie, referenced by its imdb id.
     For search and display purposes, mostly.
     """
-    # this is really just for the ability to do joins
     movie = models.ForeignKey(Movie, to_field='imdb_id', db_constraint=False,
                               db_column='imdb_id', on_delete=models.DO_NOTHING,
                               related_name='title_translations')
@@ -63,3 +74,17 @@ class TitleTranslation(models.Model):
 
     class Meta:
         unique_together = ('movie', 'language')
+
+
+class ParsedMovie(models.Model):
+    title = models.CharField(max_length=255)
+    source_id = models.CharField(max_length=255)
+    additional_data = models.TextField()
+
+    movie = models.ForeignKey(Movie, to_field='imdb_id', db_constraint=False,
+                              db_column='imdb_id', on_delete=models.DO_NOTHING,
+                              related_name='+', null=True)
+    is_rejected = models.BooleanField(default=False)
+
+    def __str__(self):
+        return '{} (id: {})'.format(self.title, self.source_id)
