@@ -1,5 +1,7 @@
 import logging
 import re
+from langdetect import detect as detect_language
+from langdetect.lang_detect_exception import LangDetectException
 
 from sources import wikidata
 
@@ -70,18 +72,42 @@ def get_movie_titles_from_item(item):
     # wikipedia page titles are preferred over wikidata labels
     # cause they tend to represent the 'popular' title of the movie
     # much better, even though they often need significant cleanup
-    used_languages = []
+    #
+    # but sometimes, wikipedia page titles are actually in english
+    # for some reason and wikidata might have the correctly translated
+    # title, so in cases when we have both, we attempt to detect the
+    # languages and take the label if it fits but the wiki page title doesn't
+
+    wiki_titles = {}
     for site, title in item.sitelinks.items():
         if not site.endswith('wiki'):
             continue
-
         language = site[:-4]
-        yield language, clean_title(title)
-        used_languages.append(language)
+        wiki_titles[language] = title
 
-    for language, title in item.labels.items():
-        if language not in used_languages:
+    for language, title in wiki_titles.items():
+        if language not in item.labels:
             yield language, clean_title(title)
+            continue
+
+        label = item.labels[language]
+        try:
+            detected_title_language = detect_language(title)
+            detected_label_language = detect_language(label)
+        except LangDetectException:
+            yield language, clean_title(title)
+            continue
+
+        if detected_title_language == detected_label_language:
+            yield language, clean_title(title)
+        elif detected_label_language == language:
+            yield language, clean_title(label)
+        else:
+            yield language, clean_title(title)
+
+    for language, label in item.labels.items():
+        if language not in wiki_titles:
+            yield language, clean_title(label)
 
 
 def clean_title(title):
