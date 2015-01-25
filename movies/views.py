@@ -1,7 +1,6 @@
 from operator import attrgetter
 from langdetect import detect as detect_language
 from langdetect.lang_detect_exception import LangDetectException
-from funcy import first
 
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
