@@ -1,8 +1,5 @@
 import logging
 import re
-from funcy import chunks
-
-from django.db import transaction
 
 from sources import wikidata
 
@@ -49,16 +46,16 @@ clean_title_re = re.compile(
 def update():
     logger.info("Beginning update")
     total = 0
-    for chunk in chunks(1000, get_all_movie_titles()):
-        with transaction.atomic():
-            for imdb_id, language, title in chunk:
-                TitleTranslation.objects.update_or_create(
-                    movie_id=imdb_id, language=language,
-                    defaults={
-                        'title': title[:255]
-                    })
-                total += 1
-        logger.info("Updated %d titles" % total)
+    for imdb_id, language, title in get_all_movie_titles():
+        TitleTranslation.objects.update_or_create(
+            movie_id=imdb_id, language=language,
+            defaults={
+                'title': title[:255]
+            })
+        total += 1
+        if total % 1000 == 0:
+            logger.info("Updated %d titles" % total)
+    logger.info("Updated %d titles" % total)
     logger.info("Finished")
 
 
