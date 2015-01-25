@@ -90,3 +90,16 @@ class CleanTitleTestCase(TestCase):
         expected_title = 'Пингвины из Мадагаскара'
         for title in original_titles:
             self.assertEqual(clean_title(title), expected_title)
+
+    def test_russian_anime(self):
+        original_titles = [
+            'Оборотни',
+            'Оборотни (аниме)',
+            'Оборотни (аниме 1999)',
+            'Оборотни (аниме, 1999)',
+            'Оборотни (1999 аниме)',
+            'Оборотни (1999, аниме)',
+        ]
+        expected_title = 'Оборотни'
+        for title in original_titles:
+            self.assertEqual(clean_title(title), expected_title)
