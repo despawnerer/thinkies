@@ -1,7 +1,4 @@
 import logging
-from funcy import chunks
-
-from django.db import transaction
 
 from sources import omdb
 
@@ -14,16 +11,15 @@ logger = logging.getLogger(__name__)
 def update():
     logger.info("Beginning update")
     total = 0
-    for chunk in chunks(1000, omdb.load_latest()):
-        with transaction.atomic():
-            for item in chunk:
-                update_item(item)
-                total += 1
-        logger.info("Updated %d movies" % total)
+    for item in omdb.load_latest():
+        update_item(item)
+        total += 1
+        if total % 1000 == 0:
+            logger.info("Updated %d movies" % total)
+    logger.info("Updated %d movies" % total)
     logger.info("Finished")
 
 
-@transaction.atomic
 def update_item(item):
     return Movie.objects.update_or_create(
         imdb_id=item.imdb_id, defaults=item_to_updated_fields(item))
