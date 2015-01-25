@@ -101,7 +101,9 @@ def get_movie_items():
     results = collection.find({
         'claims.P31.mainsnak.datavalue.value': {'$in': FILM_TYPE_REFERENCES},
         'claims.P345.mainsnak.datavalue.value': {'$exists': True},
-    }, fields=['labels', 'sitelinks', 'claims.P345.mainsnak.datavalue'])
+    }, fields=[
+        'labels', 'sitelinks', 'claims.P345.mainsnak.datavalue'
+    ], timeout=False)
 
     logger.info("Total movie items: %d", results.count())
 
