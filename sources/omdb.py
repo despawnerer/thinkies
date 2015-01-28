@@ -14,8 +14,9 @@ def load_latest():
 
 
 def load_from_filename(filename):
-    with open(filename, 'r', encoding='ISO-8859-1') as f:
-        reader = csv.DictReader(f, delimiter='\t')
+    with open(filename, 'r', encoding='ISO-8859-1', newline='\r\n') as f:
+        reader = csv.DictReader(f, delimiter='\t', quoting=csv.QUOTE_NONE,
+                                strict=True)
         yield from map(Item, reader)
 
 
