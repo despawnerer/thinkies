@@ -2,8 +2,10 @@ from requests_oauthlib import OAuth1Session
 
 from django.conf import settings
 
+from .base import Service
 
-class Twitter:
+
+class Twitter(Service):
     version = '1.1'
     base_url = 'https://api.twitter.com/%s' % version
 
