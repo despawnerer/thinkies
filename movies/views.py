@@ -1,6 +1,7 @@
 from operator import attrgetter
 from langdetect import detect as detect_language
 from langdetect.lang_detect_exception import LangDetectException
+from itertools import chain
 
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -8,6 +9,8 @@ from django.utils.translation import get_language
 from django.db.models import Prefetch
 
 from haystack.query import SearchQuerySet
+
+from users.actions import get_friends
 
 from .models import Movie, TitleTranslation, ParsedMovie
 from .consts import SEARCHABLE_LANGUAGES
@@ -20,10 +23,21 @@ class MovieView(DetailView):
     def get_context_data(self, **kwargs):
         context = {
             'movie': self.object,
-            'tip_list': self.object.tips.all(),
+            'tip_list': self.get_tips(),
         }
         context.update(kwargs)
         return context
+
+    def get_tips(self):
+        all_tips = self.object.tips.all()
+        user = self.request.user
+        if not user.is_authenticated():
+            return all_tips
+
+        friends = get_friends(user)
+        friend_tips = all_tips.filter(author__in=friends)
+        other_tips = all_tips.exclude(author__in=friends)
+        return chain(friend_tips, other_tips)
 
 
 class SearchView(ListView):
