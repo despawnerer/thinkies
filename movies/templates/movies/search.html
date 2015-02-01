@@ -11,6 +11,16 @@
                     {{ movie.imdb_rating }}
                     {% if movie.imdb_votes %} ({{ movie.imdb_votes }}){% endif %}
                 {% endif %}
+                {% if movie.friend_tips %}
+                    <ul>
+                    {% for tip in movie.friend_tips %}
+                        <li>
+                            {{ tip.author }}<br/>
+                            {{ tip }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
             </li>
             {% endfor %}
         </ul>

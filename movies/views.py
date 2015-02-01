@@ -11,6 +11,7 @@ from django.db.models import Prefetch
 from haystack.query import SearchQuerySet
 
 from users.actions import get_friends
+from tips.models import Tip
 
 from .models import Movie, TitleTranslation, ParsedMovie
 from .consts import SEARCHABLE_LANGUAGES
@@ -49,15 +50,23 @@ class SearchView(ListView):
         if not query:
             return None
 
+        if self.request.user.is_authenticated():
+            friends = get_friends(self.request.user)
+        else:
+            friends = []
+
         results = self.get_search_results(query)
         imdb_ids = map(attrgetter('imdb_id'), results)
-        prefetch = Prefetch(
+        prefetch_titles = Prefetch(
             'title_translations',
             queryset=TitleTranslation.objects.filter(language=get_language()))
+        prefetch_tips = Prefetch(
+            'tips', to_attr='friend_tips',
+            queryset=Tip.objects.filter(author__in=friends))
         movies = (
             Movie.objects
             .filter(imdb_id__in=imdb_ids)
-            .prefetch_related(prefetch))
+            .prefetch_related(prefetch_titles, prefetch_tips))
         movies_by_imdb_id = {m.imdb_id: m for m in movies}
         return [movies_by_imdb_id[result.imdb_id] for result in results]
 
