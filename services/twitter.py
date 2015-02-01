@@ -26,6 +26,24 @@ class Twitter:
         instance.user = user
         instance.association = association
         return instance
+
+    def get_friends(self, user_id):
+        following = set(self.get_cursored('friends/ids', 'ids',
+                                          user_id=user_id))
+        followers = set(self.get_cursored('followers/ids', 'ids',
+                                          user_id=user_id))
+        muted = set(self.get_cursored('mutes/users/ids', 'ids'))
+        return (following & followers) - muted
+
+    def get_cursored(self, path, result_field, **params):
+        results = []
+        cursor = -1
+        while cursor != 0:
+            response = self.get(path, cursor=cursor, **params)
+            results += response[result_field]
+            cursor = response['next_cursor']
+        return results
+
     def get(self, path, **params):
         url = self._build_url(path)
         response = self.session.get(url, params=params)
