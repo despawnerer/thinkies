@@ -14,9 +14,13 @@ __all__ = ['get_friends', 'update_friends']
 
 def get_friends(user):
     User = get_user_model()
+    if not user.is_authenticated():
+        return User.objects.none()
+
     queries = [
         Q(social_auth__provider=f.provider, social_auth__uid__in=f.uids)
         for f in user.friend_lists.all()]
+
     if queries:
         return User.objects.filter(reduce(or_, queries))
     else:

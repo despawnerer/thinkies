@@ -30,12 +30,8 @@ class MovieView(DetailView):
         return context
 
     def get_tips(self):
+        friends = get_friends(self.request.user)
         all_tips = self.object.tips.all()
-        user = self.request.user
-        if not user.is_authenticated():
-            return all_tips
-
-        friends = get_friends(user)
         friend_tips = all_tips.filter(author__in=friends)
         other_tips = all_tips.exclude(author__in=friends)
         return chain(friend_tips, other_tips)
@@ -50,10 +46,7 @@ class SearchView(ListView):
         if not query:
             return None
 
-        if self.request.user.is_authenticated():
-            friends = get_friends(self.request.user)
-        else:
-            friends = []
+        friends = get_friends(self.request.user)
 
         results = self.get_search_results(query)
         imdb_ids = map(attrgetter('imdb_id'), results)

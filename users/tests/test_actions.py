@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.contrib.auth.models import AnonymousUser
 
 import services
 
@@ -9,6 +10,11 @@ from .factories import UserFactory, UserSocialAuthFactory
 
 
 class GetFriendsTestCase(TestCase):
+    def test_returns_empty_set_for_anonymous_users(self):
+        user = AnonymousUser()
+        friends = get_friends(user)
+        self.assertSetEqual(set(friends), set())
+
     def test_returns_empty_list_with_no_friends(self):
         user = UserFactory.create()
         friends = get_friends(user)
