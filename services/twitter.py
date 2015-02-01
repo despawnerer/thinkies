@@ -50,6 +50,7 @@ class Twitter:
         return self._handle_response(response)
 
     def _handle_response(self, response):
+        response.raise_for_status()
         return response.json()
 
     def _build_url(self, path):
