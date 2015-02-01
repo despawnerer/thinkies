@@ -17,11 +17,15 @@ class Twitter:
         association = user.social_auth.get(provider='twitter')
         oauth_token = association.tokens['oauth_token']
         oauth_token_secret = association.tokens['oauth_token_secret']
-        return cls(
+
+        instance = cls(
             settings.SOCIAL_AUTH_TWITTER_KEY,
             settings.SOCIAL_AUTH_TWITTER_SECRET,
             oauth_token, oauth_token_secret)
 
+        instance.user = user
+        instance.association = association
+        return instance
     def get(self, path, **params):
         url = self._build_url(path)
         response = self.session.get(url, params=params)
