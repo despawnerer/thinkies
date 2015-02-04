@@ -11,7 +11,7 @@ from django.db.models import Prefetch
 from haystack.query import SearchQuerySet
 
 from users.actions import get_friends
-from tips.models import Tip
+from opinions.models import Opinion
 
 from .models import Movie, TitleTranslation, ParsedMovie
 from .consts import SEARCHABLE_LANGUAGES
@@ -24,17 +24,17 @@ class MovieView(DetailView):
     def get_context_data(self, **kwargs):
         context = {
             'movie': self.object,
-            'tip_list': self.get_tips(),
+            'opinion_list': self.get_opinions(),
         }
         context.update(kwargs)
         return context
 
-    def get_tips(self):
+    def get_opinions(self):
         friends = get_friends(self.request.user)
-        all_tips = self.object.tips.all()
-        friend_tips = all_tips.filter(author__in=friends)
-        other_tips = all_tips.exclude(author__in=friends)
-        return chain(friend_tips, other_tips)
+        all_opinions = self.object.opinions.all()
+        friend_opinions = all_opinions.filter(author__in=friends)
+        other_opinions = all_opinions.exclude(author__in=friends)
+        return chain(friend_opinions, other_opinions)
 
 
 class SearchView(ListView):
@@ -53,13 +53,13 @@ class SearchView(ListView):
         prefetch_titles = Prefetch(
             'title_translations',
             queryset=TitleTranslation.objects.filter(language=get_language()))
-        prefetch_tips = Prefetch(
-            'tips', to_attr='friend_tips',
-            queryset=Tip.objects.filter(author__in=friends))
+        prefetch_opinions = Prefetch(
+            'opinions', to_attr='friend_opinions',
+            queryset=Opinion.objects.filter(author__in=friends))
         movies = (
             Movie.objects
             .filter(imdb_id__in=imdb_ids)
-            .prefetch_related(prefetch_titles, prefetch_tips))
+            .prefetch_related(prefetch_titles, prefetch_opinions))
         movies_by_imdb_id = {m.imdb_id: m for m in movies}
         return [movies_by_imdb_id[result.imdb_id] for result in results]
 

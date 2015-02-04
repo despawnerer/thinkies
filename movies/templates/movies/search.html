@@ -11,12 +11,12 @@
                     {{ movie.imdb_rating }}
                     {% if movie.imdb_votes %} ({{ movie.imdb_votes }}){% endif %}
                 {% endif %}
-                {% if movie.friend_tips %}
+                {% if movie.friend_opinions %}
                     <ul>
-                    {% for tip in movie.friend_tips %}
+                    {% for opinion in movie.friend_opinions %}
                         <li>
-                            {{ tip.author }}<br/>
-                            {{ tip }}
+                            {{ opinion.author }}<br/>
+                            {{ opinion }}
                         </li>
                     {% endfor %}
                     </ul>

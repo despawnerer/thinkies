@@ -37,11 +37,11 @@
     </ul>
 
     {% if movie.is_released %}
-        {% include 'tips/includes/create_form.html' %}
-        {% if tip_list %}
+        {% include 'opinions/includes/create_form.html' %}
+        {% if opinion_list %}
         <ol>
-            {% for tip in tip_list %}
-                {% include 'tips/includes/list_item.html' %}
+            {% for opinion in opinion_list %}
+                {% include 'opinions/includes/list_item.html' %}
             {% endfor %}
         </ol>
         {% endif %}

@@ -1,8 +1,14 @@
 {% load i18n %}
-<form action="{% url 'tips:create' %}" method="post">
+<form action="{% url 'opinions:create' %}" method="post">
     {% csrf_token %}
     <div>
         <input type="hidden" name="movie" value="{{ movie.pk }}"/>
+        {% trans "Did you like it?" %}
+        <select name="rating">
+            <option value="0">{% trans "No" %}</option>
+            <option value="5">{% trans "It was OK" %}</option>
+            <option value="10">{% trans "Yes!" %}</option>
+        </select>
         <textarea name="text" placeholder="{% trans "Tell people what you thought" %}"></textarea>
     </div>
     <div>

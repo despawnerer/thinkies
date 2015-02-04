@@ -46,7 +46,7 @@ INSTALLED_APPS = (
     'thinkies',
     'users',
     'movies',
-    'tips',
+    'opinions',
     'api',
 )
 
