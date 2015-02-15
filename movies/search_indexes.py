@@ -1,73 +1,57 @@
+from functools import partial
+
 from haystack import indexes
 
 from thinkies.search.fields import CharField
 
 from .models import Movie
+from .consts import (
+    SEARCHABLE_LANGUAGES,
+    SEARCH_EXACT_TITLE_MATCH_BOOST,
+    SEARCH_LANGUAGE_ANALYZERS,
+)
 
 
-class MovieIndex(indexes.SearchIndex, indexes.Indexable):
+class BaseMovieIndex(indexes.SearchIndex):
     text = indexes.CharField(document=True, model_attr='title')
     imdb_id = indexes.CharField(model_attr='imdb_id')
     year = indexes.IntegerField(model_attr='year')
-    title_en = CharField(analyzer='english')
-    title_ru = CharField(analyzer='russian')
-    title_fr = CharField(analyzer='french')
-    title_es = CharField(analyzer='spanish')
-    title_de = CharField(analyzer='german')
-    title_nl = CharField(analyzer='dutch')
-    title_sv = CharField(analyzer='swedish')
-    title_hi = CharField(analyzer='hindi')
-    title_no = CharField(analyzer='norwegian')
-    title_nb = CharField(analyzer='norwegian')
-    title_nn = CharField(analyzer='norwegian')
-    title_pt = CharField(analyzer='portuguese')
-    title_it = CharField(analyzer='italian')
-    title_da = CharField(analyzer='danish')
 
     def get_model(self):
         return Movie
 
     def index_queryset(self, using=None):
-        return self.get_model().objects.prefetch_related('title_translations')
+        return self.get_model().objects.prefetch_related('localizations')
 
-    def prepare_title_en(self, obj):
-        return obj.titles_by_language.get('en') or ''
 
-    def prepare_title_ru(self, obj):
-        return obj.titles_by_language.get('ru') or ''
+def prepare_title(language, obj):
+    localization = obj.localizations_by_language.get(language)
+    return localization.title if localization else ''
 
-    def prepare_title_fr(self, obj):
-        return obj.titles_by_language.get('fr') or ''
 
-    def prepare_title_es(self, obj):
-        return obj.titles_by_language.get('es') or ''
+def prepare_aliases(language, obj):
+    localization = obj.localizations_by_language.get(language)
+    if localization is None:
+        return ''
 
-    def prepare_title_de(self, obj):
-        return obj.titles_by_language.get('de') or ''
+    all_titles = []
+    if localization.title:
+        all_titles.append(localization.title)
 
-    def prepare_title_nl(self, obj):
-        return obj.titles_by_language.get('nl') or ''
+    if localization.aliases:
+        all_titles += localization.aliases
 
-    def prepare_title_sv(self, obj):
-        return obj.titles_by_language.get('sv') or ''
+    return '\n'.join(all_titles)
 
-    def prepare_title_hi(self, obj):
-        return obj.titles_by_language.get('hi') or ''
 
-    def prepare_title_no(self, obj):
-        return obj.titles_by_language.get('no') or ''
+index_dict = {}
+for language in SEARCHABLE_LANGUAGES:
+    analyzer = SEARCH_LANGUAGE_ANALYZERS.get(language)
+    index_dict.update({
+        'title_%s' % language: CharField(boost=SEARCH_EXACT_TITLE_MATCH_BOOST),
+        'aliases_%s' % language: CharField(analyzer=analyzer),
+        'prepare_title_%s' % language: partial(prepare_title, language),
+        'prepare_aliases_%s' % language: partial(prepare_aliases, language),
+    })
 
-    def prepare_title_nb(self, obj):
-        return obj.titles_by_language.get('nb') or ''
-
-    def prepare_title_nn(self, obj):
-        return obj.titles_by_language.get('nn') or ''
-
-    def prepare_title_pt(self, obj):
-        return obj.titles_by_language.get('pt') or ''
-
-    def prepare_title_it(self, obj):
-        return obj.titles_by_language.get('it') or ''
-
-    def prepare_title_da(self, obj):
-        return obj.titles_by_language.get('da') or ''
+MovieIndex = type('MovieIndex', (BaseMovieIndex, indexes.Indexable), index_dict)

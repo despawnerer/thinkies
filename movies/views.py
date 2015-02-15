@@ -8,13 +8,12 @@ from django.views.generic.detail import DetailView
 from django.utils.translation import get_language
 from django.db.models import Prefetch
 
-from haystack.query import SearchQuerySet
-
 from users.actions import get_friends
 from opinions.models import Opinion
 
 from .models import Movie, Localization, ParsedMovie
 from .consts import SEARCHABLE_LANGUAGES
+from . import search
 
 
 class MovieView(DetailView):
@@ -64,20 +63,19 @@ class SearchView(ListView):
         return [movies_by_imdb_id[result.imdb_id] for result in results]
 
     def get_search_results(self, query):
-        language_set = {get_language()}
+        current_language = get_language()
 
+        languages = [current_language]
         try:
-            language_set.add(detect_language(query))
+            detected_language = detect_language(query)
+            if (detected_language in SEARCHABLE_LANGUAGES
+                    and detected_language != current_language):
+                languages.append(detected_language)
         except LangDetectException:
             # TODO: log these?
             pass
 
-        sqs = SearchQuerySet().filter_or(text=query)
-        for language in language_set:
-            if language in SEARCHABLE_LANGUAGES:
-                param = {'title_%s' % language: query}
-                sqs = sqs.filter_or(**param)
-        return sqs[:20]
+        return search.find(query, languages)[:20]
 
 
 class ParsedMoviesView(ListView):
@@ -99,13 +97,10 @@ class ParsedMoviesView(ListView):
         return parsed_movie_list
 
     def get_suggestion(self, query):
-        sqs = SearchQuerySet().filter_or(text=query)
-        for language in SEARCHABLE_LANGUAGES:
-            param = {'title_%s' % language: query}
-            sqs = sqs.filter_or(**param)
+        search_results = search.find(query)[:1]
 
         try:
-            result = sqs[0]
+            result = search_results[0]
             return Movie.objects.get(imdb_id=result.imdb_id)
         except IndexError:
             return None
