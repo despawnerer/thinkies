@@ -1,5 +1,3 @@
-from funcy import cached_property
-
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -44,15 +42,18 @@ class Movie(models.Model):
 
     @property
     def translated_title(self):
-        return self.localization.title if self.localization else self.title
+        if self.localization:
+            return self.localization.title or self.title
+        else:
+            return self.title
 
-    @cached_property
+    @property
     def localization(self):
         return self.localizations_by_language.get(get_language())
 
-    @cached_property
+    @property
     def localizations_by_language(self):
-        return {t.language: t.title for t in self.localizations.all()}
+        return {l.language: l for l in self.localizations.all()}
 
 
 class Localization(models.Model):
