@@ -3,3 +3,4 @@ __pycache__
 thinkies/static/components/external
 db.sqlite3
 data
+thinkies/settings/local.py

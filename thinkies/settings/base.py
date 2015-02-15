@@ -1,14 +1,5 @@
-"""
-Django settings for thinkies project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
-"""
-
 import os
+
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -16,17 +7,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '8#o_-qrj3k8w^-2ww81u$+w7zu6@3re#r$(q=$3t=@clo54)ev'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-TEMPLATE_DEBUG = True
-
+DEBUG = False
+TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = []
 
 
