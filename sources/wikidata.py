@@ -39,7 +39,7 @@ class Item:
 
     @cached_property
     def descriptions(self):
-        description_jsons = self.json.get('descriptions')
+        description_jsons = self.json.get('descriptions') or {}
         return {
             language: json['value']
             for language, json in description_jsons.items()}
