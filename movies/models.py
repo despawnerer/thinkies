@@ -6,6 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.utils.translation import get_language
 
+from djorm_pgarray.fields import ArrayField
+
 
 class Movie(models.Model):
     title = models.CharField(max_length=255)
@@ -42,11 +44,34 @@ class Movie(models.Model):
 
     @property
     def translated_title(self):
-        return self.titles_by_language.get(get_language()) or self.title
+        return self.localization.title if self.localization else self.title
 
     @cached_property
-    def titles_by_language(self):
-        return {t.language: t.title for t in self.title_translations.all()}
+    def localization(self):
+        return self.localizations_by_language.get(get_language())
+
+    @cached_property
+    def localizations_by_language(self):
+        return {t.language: t.title for t in self.localizations.all()}
+
+
+class Localization(models.Model):
+    movie = models.ForeignKey(Movie, to_field='imdb_id', db_constraint=False,
+                              db_column='imdb_id', on_delete=models.DO_NOTHING,
+                              related_name='localizations')
+    language = models.CharField(max_length=36)
+
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    aliases = ArrayField('character varying(255)', null=False, default='{}')
+    poster = models.ImageField(null=True)
+    wikipedia_page = models.CharField(max_length=1024)
+
+    class Meta:
+        unique_together = ('movie', 'language')
+
+    def __str__(self):
+        return '%s (%s)' % (self.title, self.language)
 
 
 class TheatricalDay(models.Model):
@@ -59,21 +84,6 @@ class TheatricalDay(models.Model):
 
     class Meta:
         unique_together = ('movie', 'country', 'city', 'date')
-
-
-class TitleTranslation(models.Model):
-    """
-    Holds a translated title for a movie, referenced by its imdb id.
-    For search and display purposes, mostly.
-    """
-    movie = models.ForeignKey(Movie, to_field='imdb_id', db_constraint=False,
-                              db_column='imdb_id', on_delete=models.DO_NOTHING,
-                              related_name='title_translations')
-    language = models.CharField(max_length=36)
-    title = models.CharField(max_length=255)
-
-    class Meta:
-        unique_together = ('movie', 'language')
 
 
 class ParsedMovie(models.Model):

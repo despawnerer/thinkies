@@ -13,7 +13,7 @@ from haystack.query import SearchQuerySet
 from users.actions import get_friends
 from opinions.models import Opinion
 
-from .models import Movie, TitleTranslation, ParsedMovie
+from .models import Movie, Localization, ParsedMovie
 from .consts import SEARCHABLE_LANGUAGES
 
 
@@ -50,16 +50,16 @@ class SearchView(ListView):
 
         results = self.get_search_results(query)
         imdb_ids = map(attrgetter('imdb_id'), results)
-        prefetch_titles = Prefetch(
-            'title_translations',
-            queryset=TitleTranslation.objects.filter(language=get_language()))
+        prefetch_localizations = Prefetch(
+            'localizations',
+            queryset=Localization.objects.filter(language=get_language()))
         prefetch_opinions = Prefetch(
             'opinions', to_attr='friend_opinions',
             queryset=Opinion.objects.filter(author__in=friends))
         movies = (
             Movie.objects
             .filter(imdb_id__in=imdb_ids)
-            .prefetch_related(prefetch_titles, prefetch_opinions))
+            .prefetch_related(prefetch_localizations, prefetch_opinions))
         movies_by_imdb_id = {m.imdb_id: m for m in movies}
         return [movies_by_imdb_id[result.imdb_id] for result in results]
 

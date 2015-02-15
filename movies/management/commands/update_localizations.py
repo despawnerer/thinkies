@@ -1,8 +1,8 @@
 from django.core.management import BaseCommand
 
-from movies.maintenance import title_translations
+from movies.maintenance import localizations
 
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        title_translations.update()
+        localizations.update()

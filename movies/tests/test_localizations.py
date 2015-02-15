@@ -1,42 +1,13 @@
 import os
-import json
 
 from django.test import TestCase
 
-from movies.maintenance.title_translations import (
-    get_movie_titles_from_item,
+from movies.maintenance.localizations import (
     clean_title,
 )
 
-from sources.wikidata import Item
-
 
 TEST_ROOT = os.path.dirname(os.path.realpath(__file__))
-
-
-class GetMovieTitlesForItemTestCase(TestCase):
-    def setUp(self):
-        filename = 'data/movie_item.json'
-        with open(os.path.join(TEST_ROOT, filename)) as f:
-            data = json.load(f)
-        self.item = Item(data)
-
-    def test_titles_get_picked_up_from_sitelinks(self):
-        expected_titles = set([
-            ('fr', 'Whiplash'),
-            ('en', 'Whiplash'),
-            ('it', 'Whiplash'),
-            ('ko', '위플래쉬 (영화)'),
-            ('es', 'Whiplash (película de 2014)'),
-            ('zh-hk', '鼓動真我'),
-            ('hr', 'Ritam ludila (2014.)'),
-            ('nl', 'Whiplash'),
-            ('zh', '爆裂鼓手'),
-            ('fi', 'Whiplash (elokuva)'),
-            ('ru', 'Одержимость')
-        ])
-        titles = set(get_movie_titles_from_item(self.item))
-        self.assertSetEqual(titles, expected_titles)
 
 
 class CleanTitleTestCase(TestCase):
