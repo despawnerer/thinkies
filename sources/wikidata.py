@@ -45,6 +45,13 @@ class Item:
             for language, json in description_jsons.items()}
 
     @cached_property
+    def aliases(self):
+        aliases_jsons = self.json.get('aliases') or {}
+        return {
+            language: list(map(lambda x: x['value'], json))
+            for language, json in aliases_jsons.items()}
+
+    @cached_property
     def sitelinks(self):
         sitelink_jsons = self.json.get('sitelinks') or {}
         return {
