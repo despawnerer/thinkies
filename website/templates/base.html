@@ -1,0 +1,39 @@
+{% load staticfiles i18n %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <title>{% block title %}{% trans 'thinkies' %}{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <link href='//fonts.googleapis.com/css?family=RobotoDraft:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang={{ LANGUAGE_CODE }}' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+
+<body>
+    <div id="main-container">
+        <header id="main-toolbar">
+            <div id="logo-area">
+                <a href="{% url 'site:index' %}" id="logo">{% trans 'thinkies' %}</a>
+                {% include 'elements/language_chooser.html' %}
+            </div>
+            <div id="user-area">
+                {% include 'elements/user_area.html' %}
+            </div>
+        </header>
+
+        <form action="{% url 'site:search' %}" method="get" id="search">
+            <input type="text" placeholder="{% trans "Movies" %}" value="{% block search_query %}{% endblock %}" name="q"/>
+        </form>
+
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+
+        <footer id="footer">
+            <span class="heart">❤</span>
+            {% blocktrans %}Made with love in St. Petersburg, 2015.{% endblocktrans %}
+        </footer>
+    </div>
+</body>
+</html>

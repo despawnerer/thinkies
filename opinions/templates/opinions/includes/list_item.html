@@ -1,9 +1,0 @@
-{% load i18n %}
-<li>
-    <div class="opinion-meta">
-        {% blocktrans with author=opinion.author url=opinion.get_absolute_url date=opinion.creation_date %}{{ author }} on <a href="{{ url }}">{{ date }}</a>{% endblocktrans %}
-    </div>
-    <p>
-        {{ opinion.text|linebreaksbr }}
-    </p>
-</li>

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<ul id="index-movie-list">
+    {% for movie in movie_list %}
+        <li>
+            {% include 'elements/index_movie.html' %}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

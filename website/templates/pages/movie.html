@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<div style="display: flex; flex-direction: row;">
+    <div style="width: 25%; flex: none; margin-right: 20px;">
+        <div class="movie-poster">
+            {% if movie.poster %}
+            <img src="{{ movie.poster.url }}"/>
+            {% else %}
+            <div class="fake-poster" style="height: 315px;">
+                <span class="text">{{ movie.translated_title }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div>
+        <h1>{{ movie.translated_title }}</h1>
+        <ul class="movie-info">
+            <li>{{ movie.year }}</li>
+            {% if movie.mpaa_rating %}
+            <li>{{ movie.mpaa_rating }}</li>
+            {% endif %}
+            <li><a href="{{ movie.imdb_url }}" target="_blank" rel="nofollow">IMDb{% if movie.imdb_rating %} {{ movie.imdb_rating }}{% endif %}</a></li>
+            {% if movie.localization.wikipedia_page %}
+            <li><a href="//{{ movie.localization.language }}.wikipedia.org/wiki/{{ movie.localization.wikipedia_page }}" target="_blank" rel="nofollow">{% trans "Wikipedia" %}</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,9 +1,0 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<div id="thought-list" layout horizontal wrap>
-    {% for thought in object_list %}
-        {% include 'thought_item.html' with thought=thought only %}
-    {% endfor %}
-</div>
-{% endblock %}

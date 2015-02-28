@@ -1,0 +1,34 @@
+{% load i18n %}
+{% if user.is_authenticated %}
+    {% for backend in backends.not_associated %}
+        <a href="{% url 'social:begin' backend=backend %}?next={{ request.get_full_path|urlencode }}" class="button">
+            {% blocktrans with backend=backend %}connect {{ backend }}{% endblocktrans %}
+        </a>
+    {% endfor %}
+    {% for association in backends.associated %}
+    {% with association.provider as backend %}
+        {% if backends.associated|length > 1 %}
+            <form action="{% url 'social:disconnect' backend=backend %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+                <button class="button">
+                {% blocktrans with backend=backend %}disconnect {{ backend }}{% endblocktrans %}
+                </button>
+            </form>
+        {% else %}
+            <span>
+            {% blocktrans with backend=backend %}logged in with {{ backend }}{% endblocktrans %}
+            </span>
+        {% endif %}
+    {% endwith %}
+    {% endfor %}
+    <a href="{% url 'logout' %}?next={{ request.get_full_path|urlencode }}" class="button">
+        {% trans "leave" %}
+    </a>
+{% else %}
+    {% for backend in backends.backends %}
+        <a href="{% url 'social:begin' backend=backend %}?next={{ request.get_full_path|urlencode }}" class="button">
+            {% blocktrans with backend=backend %}log in with {{ backend }}{% endblocktrans %}
+        </a>
+    {% endfor %}
+{% endif %}

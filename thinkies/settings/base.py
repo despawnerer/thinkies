@@ -3,7 +3,7 @@ import os
 from django.utils.translation import ugettext_lazy as _
 
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 
 
@@ -32,7 +32,9 @@ INSTALLED_APPS = (
     'users',
     'movies',
     'opinions',
+
     'api',
+    'website',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -44,6 +46,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'website.middleware.location.LocationMiddleware',
     'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
 )
 

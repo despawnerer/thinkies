@@ -36,46 +36,6 @@ class MovieView(DetailView):
         return chain(friend_opinions, other_opinions)
 
 
-class SearchView(ListView):
-    context_object_name = 'movie_list'
-    template_name = 'movies/search.html'
-
-    def get_queryset(self):
-        query = (self.request.GET.get('q') or '').strip()
-        if not query:
-            return None
-
-        friends = get_friends(self.request.user)
-
-        results = self.get_search_results(query)
-        imdb_ids = map(attrgetter('imdb_id'), results)
-        prefetch_localizations = Prefetch(
-            'localizations',
-            queryset=Localization.objects.filter(language=get_language()))
-        prefetch_opinions = Prefetch(
-            'opinions', to_attr='friend_opinions',
-            queryset=Opinion.objects.filter(author__in=friends))
-        movies = (
-            Movie.objects
-            .filter(imdb_id__in=imdb_ids)
-            .prefetch_related(prefetch_localizations, prefetch_opinions))
-        movies_by_imdb_id = {m.imdb_id: m for m in movies}
-        return [movies_by_imdb_id[result.imdb_id] for result in results]
-
-    def get_search_results(self, query):
-        current_language = get_language()
-
-        languages = [current_language]
-        try:
-            detected_language = detect_language(query)
-            if (detected_language in SEARCHABLE_LANGUAGES
-                    and detected_language != current_language):
-                languages.append(detected_language)
-        except LangDetectException:
-            # TODO: log these?
-            pass
-
-        return search.find(query, languages)[:20]
 
 
 class ParsedMoviesView(ListView):

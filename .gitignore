@@ -1,6 +1,5 @@
 *.pyc
 __pycache__
-thinkies/static/components/external
-db.sqlite3
+site/static/components/external
 data
 thinkies/settings/local.py
