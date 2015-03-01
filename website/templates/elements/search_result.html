@@ -1,16 +1,14 @@
 {% load i18n %}
 <div class="search-result">
-    <div class="poster-box">
-        <a href="{% url 'site:movie' pk=movie.pk %}" class="movie-poster">
-            {% if movie.poster %}
-            <img src="{{ movie.poster.url }}"/>
-            {% else %}
-            <div class="fake-poster">
-                <span class="text">{{ movie.translated_title }}</span>
-            </div>
-            {% endif %}
-        </a>
-    </div>
+    <a href="{% url 'site:movie' pk=movie.pk %}" class="poster">
+        {% if movie.poster %}
+        <img src="{{ movie.poster.url }}" class="poster-content"/>
+        {% else %}
+        <span class="poster-content fake-poster">
+            <span>{{ movie.translated_title }}</span>
+        </span>
+        {% endif %}
+    </a>
     <div>
         <a href="{% url 'site:movie' pk=movie.pk %}">
             {{ movie.translated_title }}

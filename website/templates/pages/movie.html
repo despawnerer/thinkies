@@ -4,16 +4,14 @@
 
 {% block content %}
 <div style="display: flex; flex-direction: row;">
-    <div style="width: 25%; flex: none; margin-right: 20px;">
-        <div class="movie-poster">
-            {% if movie.poster %}
-            <img src="{{ movie.poster.url }}"/>
-            {% else %}
-            <div class="fake-poster" style="height: 315px;">
-                <span class="text">{{ movie.translated_title }}</span>
-            </div>
-            {% endif %}
-        </div>
+    <div class="poster" style="width: 25%; flex: none; margin-right: 20px;">
+        {% if movie.poster %}
+        <img src="{{ movie.poster.url }}" class="poster-content"/>
+        {% else %}
+        <span class="poster-content fake-poster">
+            <span>{{ movie.translated_title }}</span>
+        </span>
+        {% endif %}
     </div>
     <div>
         <h1>{{ movie.translated_title }}</h1>
