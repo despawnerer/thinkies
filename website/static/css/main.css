@@ -290,13 +290,15 @@ a.poster:hover::after {
     -webkit-flex-direction: row;
 }
 
-.movie-card .poster {
+.movie-card .poster-box {
     margin-right: 20px;
     width: 25%;
 
     flex: none;
     -webkit-flex: none;
 }
+
+.movie-card .poster-box .poster { width: 100%; }
 
 .movie-card h2 {
     margin: 0;
@@ -329,7 +331,7 @@ a.poster:hover::after {
     flex-direction: row;
 }
 
-.search-result .poster {
+.search-result .poster-box {
     margin-right: 15px;
     width: 50px;
     font-size: 0.8em;
@@ -338,3 +340,4 @@ a.poster:hover::after {
     -webkit-flex: none;
 }
 
+.search-result .poster-box .poster { width: 100%; }
