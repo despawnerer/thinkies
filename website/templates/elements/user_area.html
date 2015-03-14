@@ -1,30 +1,25 @@
 {% load i18n %}
+
 {% if user.is_authenticated %}
-    {% for backend in backends.not_associated %}
-        <a href="{% url 'social:begin' backend=backend %}?next={{ request.get_full_path|urlencode }}" class="button">
-            {% blocktrans with backend=backend %}connect {{ backend }}{% endblocktrans %}
-        </a>
-    {% endfor %}
-    {% for association in backends.associated %}
-    {% with association.provider as backend %}
-        {% if backends.associated|length > 1 %}
-            <form action="{% url 'social:disconnect' backend=backend %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
-                <button class="button">
-                {% blocktrans with backend=backend %}disconnect {{ backend }}{% endblocktrans %}
-                </button>
-            </form>
-        {% else %}
-            <span>
-            {% blocktrans with backend=backend %}logged in with {{ backend }}{% endblocktrans %}
-            </span>
-        {% endif %}
-    {% endwith %}
-    {% endfor %}
-    <a href="{% url 'logout' %}?next={{ request.get_full_path|urlencode }}" class="button">
-        {% trans "leave" %}
+<div id="user-dropdown-box">
+    <a href="#" id="user-dropdown-toggle" onclick="var el=document.getElementById('user-dropdown'); el.style.display = el.style.display == 'none' ? 'block' : 'none'; return false;">
+        <span class="user-picture">
+            <img src="{{ user.default_identity.image.url }}" alt="{{ user.default_identity.name }}"/>
+        </span>
     </a>
+    <nav id="user-dropdown" style="display: none;">
+        <div id="user-dropdown-name">
+            {{ user.default_identity.name }}
+        </div>
+        <ul class="user-nav-list">
+            <li>
+                <a href="{% url 'logout' %}?next={{ request.get_full_path|urlencode }}">
+                    {% trans "log out" %}
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
 {% else %}
     {% for backend in backends.backends %}
         <a href="{% url 'social:begin' backend=backend %}?next={{ request.get_full_path|urlencode }}" class="button">
