@@ -77,6 +77,8 @@ DATABASES = {
 }
 
 
+AUTH_USER_MODEL = 'users.User'
+
 AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth',
     'social.backends.facebook.Facebook2OAuth2',
@@ -87,11 +89,10 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_uid',
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
-    'social.pipeline.user.get_username',
-    'social.pipeline.user.create_user',
+    'users.social_auth.create_user',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details',
+    'users.social_auth.create_identity',
     'users.social_auth.send_signal'
 )
 

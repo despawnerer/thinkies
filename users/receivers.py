@@ -1,5 +1,5 @@
-from .actions import update_friends
+from .actions import update_identity
 
 
-def update_friends_on_auth(user, backend, **kwargs):
-    update_friends(user, backend.name)
+def update_identity_on_auth(user, backend, **kwargs):
+    update_identity(user, backend.name)

@@ -1,10 +1,12 @@
+from collections import namedtuple
+
 from django.test import TestCase
 from django.contrib.auth.models import AnonymousUser
 
 import services
 
-from users.actions import get_friends, update_friends
-from users.models import FriendList
+from users.actions import get_friends, update_identity
+from users.models import Identity
 
 from .factories import UserFactory, UserSocialAuthFactory
 
@@ -43,33 +45,39 @@ class GetFriendsTestCase(TestCase):
         self.assertSetEqual(set(friends), set(our_friends))
 
 
-class UpdateFriendsTestCase(TestCase):
+class UpdateIdentityTestCase(TestCase):
     def setUp(self):
         services.by_provider[DUMMY_PROVIDER] = DummyService
 
     def tearDown(self):
         del services.by_provider[DUMMY_PROVIDER]
 
-    def test_creates_friend_list_when_there_isnt_one(self):
+    def test_creates_identity_when_there_isnt_one(self):
         user = UserFactory.create()
         UserSocialAuthFactory.create(
-            provider=DUMMY_PROVIDER, user=user, uid=user.pk)
+            provider=DUMMY_PROVIDER, user=user, uid='2015')
 
-        self.assertEqual(len(user.friend_lists.all()), 0)
-        update_friends(user, DUMMY_PROVIDER)
-        friend_list = user.friend_lists.get(provider=DUMMY_PROVIDER)
-        self.assertEqual(friend_list.uids, ['1', '2', '3'])
+        self.assertEqual(len(user.identities.all()), 0)
 
-    def test_updates_friend_list_from_service(self):
+        update_identity(user, DUMMY_PROVIDER)
+        identity = user.identities.get(provider=DUMMY_PROVIDER)
+        self.assertEqual(identity.uid, '2015')
+        self.assertEqual(identity.name, 'Dummy')
+        self.assertEqual(identity.friend_uids, ['1', '2', '3'])
+
+    def test_updates_data_from_service(self):
         user = UserFactory.create()
         UserSocialAuthFactory.create(
-            provider=DUMMY_PROVIDER, user=user, uid=user.pk)
-        FriendList.objects.create(
-            provider=DUMMY_PROVIDER, user=user, uids=['40', '50', '60'])
+            provider=DUMMY_PROVIDER, user=user, uid=2015)
+        Identity.objects.create(
+            provider=DUMMY_PROVIDER, user=user, uid='old', name='Wrong',
+            friend_uids=['40', '50'])
 
-        update_friends(user, DUMMY_PROVIDER)
-        friend_list = user.friend_lists.get(provider=DUMMY_PROVIDER)
-        self.assertEqual(friend_list.uids, ['1', '2', '3'])
+        update_identity(user, DUMMY_PROVIDER)
+        identity = user.identities.get(provider=DUMMY_PROVIDER)
+        self.assertEqual(identity.uid, '2015')
+        self.assertEqual(identity.name, 'Dummy')
+        self.assertEqual(identity.friend_uids, ['1', '2', '3'])
 
 
 # a dummy service for our dummy provider
@@ -80,13 +88,16 @@ DUMMY_PROVIDER = 'dummy'
 class DummyService:
     @classmethod
     def create_for_user(cls, user):
-        instance = cls()
-        instance.user = user
-        instance.association = user.social_auth.get(provider=DUMMY_PROVIDER)
-        return instance
+        return cls()
 
-    def get_friends(self, user_id):
+    def get_friends(self):
         return [1, 2, 3]
+
+    def get_profile(self):
+        return DummyProfile(2015, 'Dummy', None)
+
+
+DummyProfile = namedtuple('DummyProfile', ('uid', 'name', 'image'))
 
 
 # helpers
@@ -100,6 +111,6 @@ def create_unique_friends(user, provider, count=5):
         UserSocialAuthFactory.create(provider=provider, user=friend, uid=uid)
         friends.append(friend)
         friend_uids.append(uid)
-    FriendList.objects.create(provider=provider, user=user,
-                              uids=friend_uids)
+    Identity.objects.create(provider=provider, user=user,
+                            friend_uids=friend_uids, uid=user.pk)
     return friends

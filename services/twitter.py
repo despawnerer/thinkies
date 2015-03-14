@@ -2,17 +2,18 @@ from requests_oauthlib import OAuth1Session
 
 from django.conf import settings
 
-from .base import Service
+from .base import Service, Profile
 
 
 class Twitter(Service):
     version = '1.1'
     base_url = 'https://api.twitter.com/%s' % version
 
-    def __init__(self, client_key, client_secret, token, token_secret):
+    def __init__(self, client_key, client_secret, token, token_secret, user_id):
         self.session = OAuth1Session(
             client_key, client_secret=client_secret, resource_owner_key=token,
             resource_owner_secret=token_secret)
+        self.user_id = user_id
 
     @classmethod
     def create_for_user(cls, user):
@@ -20,22 +21,22 @@ class Twitter(Service):
         oauth_token = association.tokens['oauth_token']
         oauth_token_secret = association.tokens['oauth_token_secret']
 
-        instance = cls(
+        return cls(
             settings.SOCIAL_AUTH_TWITTER_KEY,
             settings.SOCIAL_AUTH_TWITTER_SECRET,
-            oauth_token, oauth_token_secret)
+            oauth_token, oauth_token_secret, association.uid)
 
-        instance.user = user
-        instance.association = association
-        return instance
-
-    def get_friends(self, user_id):
+    def get_friends(self):
         following = set(self.get_cursored('friends/ids', 'ids',
-                                          user_id=user_id))
+                                          user_id=self.user_id))
         followers = set(self.get_cursored('followers/ids', 'ids',
-                                          user_id=user_id))
+                                          user_id=self.user_id))
         muted = set(self.get_cursored('mutes/users/ids', 'ids'))
         return (following & followers) - muted
+
+    def get_profile(self):
+        user_info = self.get('users/show', user_id=self.user_id)
+        return TwitterProfile(user_info)
 
     def get_cursored(self, path, result_field, **params):
         results = []
@@ -57,3 +58,22 @@ class Twitter(Service):
 
     def _build_url(self, path):
         return '%s/%s.json' % (self.base_url, path)
+
+
+class TwitterProfile(Profile):
+    def __init__(self, user_info):
+        self.user_info = user_info
+
+    @property
+    def uid(self):
+        return self.user_info.get('id')
+
+    @property
+    def name(self):
+        return self.user_info.get('name')
+
+    @property
+    def image(self):
+        url = self.user_info.get('profile_image_url')
+        if url:
+            return url.replace('_normal', '')
