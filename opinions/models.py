@@ -2,8 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
-
-from djorm_pgarray.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField
 
 
 class Opinion(models.Model):
@@ -24,7 +23,7 @@ class Opinion(models.Model):
     rating = models.PositiveSmallIntegerField(
         null=True, choices=RATING_CHOICES)
     tip = models.CharField(max_length=140, blank=True)
-    adjectives = ArrayField('character varying(255)')
+    adjectives = ArrayField(models.CharField(max_length=255), default=[])
 
     class Meta:
         ordering = ('-creation_date',)

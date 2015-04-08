@@ -43,7 +43,7 @@ def update_identity(user, provider):
     Identity.objects.update_or_create(
         user=user, provider=provider, defaults={
             'uid': profile.uid,
-            'friend_uids': friend_uids,
+            'friend_uids': list(friend_uids),
             'name': profile.name,
             'image': _load_url(profile.image,
                                '{}_{}'.format(provider, user.pk)),

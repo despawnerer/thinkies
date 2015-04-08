@@ -1,13 +1,12 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import (
     BaseUserManager,
     AbstractBaseUser,
     PermissionsMixin,
 )
-
-from djorm_pgarray.fields import ArrayField
 
 
 class UserManager(BaseUserManager):
@@ -52,7 +51,7 @@ class Identity(models.Model):
     provider = models.CharField(max_length=32)
 
     uid = models.CharField(max_length=255)
-    friend_uids = ArrayField('character varying(255)')
+    friend_uids = ArrayField(models.CharField(max_length=255), default=[])
     name = models.CharField(max_length=255)
     image = models.ImageField(null=True)
 

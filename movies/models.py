@@ -3,8 +3,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.utils.translation import get_language
-
-from djorm_pgarray.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField
 
 
 class Movie(models.Model):
@@ -64,7 +63,7 @@ class Localization(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
-    aliases = ArrayField('character varying(255)', null=False, default='{}')
+    aliases = ArrayField(models.CharField(max_length=255), default=[])
     poster = models.ImageField(null=True)
     wikipedia_page = models.CharField(max_length=1024)
 
