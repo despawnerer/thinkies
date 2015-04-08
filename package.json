@@ -1,0 +1,11 @@
+{
+    "name": "thinkies",
+    "version": "0.0.0",
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/despawnerer/thinkies.git"
+    },
+    "dependencies": {
+        "browserify": "9.0.7"
+    }
+}

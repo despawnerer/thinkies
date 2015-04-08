@@ -2,12 +2,12 @@
 
 {% if user.is_authenticated %}
 <div id="user-dropdown-box">
-    <a href="#" id="user-dropdown-toggle" onclick="var el=document.getElementById('user-dropdown'); el.style.display = el.style.display == 'none' ? 'block' : 'none'; return false;">
+    <a href="#" id="user-dropdown-toggle" data-toggle="#user-dropdown">
         <span class="user-picture">
             <img src="{{ user.default_identity.image.url }}" alt="{{ user.default_identity.name }}"/>
         </span>
     </a>
-    <nav id="user-dropdown" style="display: none;">
+    <nav id="user-dropdown" hidden>
         <div id="user-dropdown-name">
             {{ user.default_identity.name }}
         </div>

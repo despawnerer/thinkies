@@ -1,4 +1,4 @@
-{% load staticfiles i18n %}<!doctype html>
+{% load staticfiles i18n assets %}<!doctype html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <title>{% block title %}{% trans 'thinkies' %}{% endblock %}</title>
@@ -35,5 +35,9 @@
             {% blocktrans %}Made with love in St. Petersburg, 2015.{% endblocktrans %}
         </footer>
     </div>
+
+    {% assets 'bundle' %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 </body>
 </html>

@@ -3,3 +3,4 @@ __pycache__
 site/static/components/external
 data
 thinkies/settings/local.py
+node_modules

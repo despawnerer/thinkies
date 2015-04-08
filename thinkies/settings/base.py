@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
+NODE_BIN_DIR = os.path.join(BASE_DIR, 'node_modules', '.bin')
 
 
 SECRET_KEY = '8#o_-qrj3k8w^-2ww81u$+w7zu6@3re#r$(q=$3t=@clo54)ev'
@@ -27,6 +28,7 @@ INSTALLED_APPS = (
     'haystack',
     'social.apps.django_app.default',
     'rest_framework',
+    'django_assets',
 
     'thinkies',
     'users',
@@ -118,11 +120,21 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django_assets.finders.AssetsFinder',
+)
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+BROWSERIFY_BIN = os.path.join(NODE_BIN_DIR, 'browserify')
 
 
 GEOIP_PATH = os.path.join(DATA_DIR, 'geoip')
