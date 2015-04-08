@@ -170,6 +170,15 @@ a:hover .user-picture.user-picture::after {
     background: white;
     z-index: 5;
     box-shadow: 1px 2px 5px #aaa;
+    transition: 0.15s;
+}
+
+#user-dropdown[hidden] {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    transform-origin: right top;
+    transform: scale(0.9);
 }
 
 .user-nav-list {
