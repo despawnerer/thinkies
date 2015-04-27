@@ -25,7 +25,8 @@
 
         {% block search %}
         <form action="{% url 'site:search' %}" method="get" id="search">
-            <input type="text" placeholder="{% trans "Movies" %}" value="{% block search_query %}{% endblock %}" name="q"/>
+            <span class="icon-search"></span>
+            <input type="text" placeholder="{% trans "Search for movies" %}" value="{% block search_query %}{% endblock %}" name="q"/>
         </form>
         {% endblock %}
 
