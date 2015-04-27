@@ -2,6 +2,7 @@
 
 {% load i18n %}
 
+{% block title %}{% blocktrans with query=query %}search results for “{{ query }}” — thinkies{% endblocktrans %}{% endblock %}
 {% block search_query %}{{ query }}{% endblock %}
 
 {% block content %}

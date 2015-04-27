@@ -2,6 +2,8 @@
 
 {% load i18n %}
 
+{% block title %}{% blocktrans with title=movie.translated_title %}{{ title }} — thinkies{% endblocktrans %}
+
 {% block content %}
 <div style="display: flex; flex-direction: row;">
     <div style="width: 25%; flex: none; margin-right: 20px;">
