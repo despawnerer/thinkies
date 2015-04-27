@@ -66,7 +66,7 @@ h1 {
 
 .user-picture img {
     vertical-align: middle;
-    height: 1em;
+    height: 1.5em;
 }
 
 a:hover .user-picture::after {
