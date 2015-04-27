@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block title %}{% trans "settings — thinkies" %}{% endblock %}
+{% block search %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "settings" %}</h1>
+
+
+{% if identities|length > 1 %}
+<section>
+<h2>{% trans "post as" %}</h2>
+<ul class="identity-list">
+    {% for identity in identities %}
+    <li>
+        <label class="identity-label">
+            <input type="radio" name="identity" value="{{ identity.provider }}" class="identity-radio"
+                {% if identities|length == 1 %} disabled{% endif %}
+                {% if identity == user.default_identity %} checked{% endif %}/>
+
+            <span class="icon-{{ identity.provider }} provider-icon"></span>
+
+            <span class="user-picture">
+                <img src="{{ identity.image.url }}" alt="{{ identity.name }}"/>
+            </span>
+
+            {{ identity.name }}
+        </label>
+    </li>
+    {% endfor %}
+</ul>
+</section>
+{% endif %}
+
+<section>
+<h2>{% trans "accounts" %}</h2>
+<ul class="account-list">
+    {% for provider in provider_details %}
+    <li>
+        <label class="account-label">{{ provider.verbose_name }}</label>
+        {% if not provider.is_associated %}
+            <a href="{% url 'social:begin' backend=provider.backend_name %}?next={{ request.get_full_path|urlencode }}" class="button provider-button {{ provider.backend_name }}">
+                <span class="provider-icon icon-{{ provider.name }}"></span>
+                {% trans "connect" %}
+            </a>
+        {% elif identities|length > 1 %}
+            <form action="{% url 'social:disconnect' backend=provider.backend_name %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+                <button class="button {{ provider.name }}-button" id="{{ provider.name }}-button">
+                {% trans "disconnect" %}
+                </button>
+            </form>
+        {% else %}
+            {% trans "logged in" %}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+</section>
+{% endblock %}
+

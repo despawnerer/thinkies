@@ -222,6 +222,29 @@ a:hover .user-picture::after {
     height: 3rem;
 }
 
+.provider-icon {
+    font-size: 1em;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.provider-icon.icon-twitter { color: #55ACEE; }
+.provider-icon.icon-facebook { color: #3b5998; }
+.provider-icon.icon-vk { color: #597DA3; }
+
+.provider-button {
+    padding: 0.3em 0.8em 0.3em 0.5em;
+}
+
+.provider-button .provider-icon {
+    color: inherit;
+    margin-right: 5px;
+}
+
+.provider-button.facebook { color: white; background: #3b5998; }
+.provider-button.twitter { color: white; background: #55ACEE; }
+.provider-button.vk-oauth2 { color: white; background: #597DA3; }
+
 
 /* Search */
 
@@ -422,3 +445,45 @@ a.poster:hover::after {
 }
 
 .search-result .poster-box .poster { width: 100%; }
+
+
+/* Settings */
+
+.identity-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.identity-list > li {
+    margin: 1.5em 0;
+}
+
+.identity-radio {
+    margin-right: 5px;
+}
+
+.identity-label {
+    display: block;
+    margin: -1.5em 0;
+    padding: 1.5em 0;
+}
+
+.identity-label .user-picture {
+    margin-top: -2px;
+}
+
+.account-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.account-list > li {
+    margin: 1.5em 0;
+}
+
+.account-label {
+    display: inline-block;
+    width: 6em;
+}

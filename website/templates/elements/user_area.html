@@ -13,6 +13,11 @@
         </div>
         <ul class="user-nav-list">
             <li>
+                <a href="{% url 'site:settings' %}">
+                    {% trans "settings" %}
+                </a>
+            </li>
+            <li>
                 <a href="{% url 'logout' %}?next={{ request.get_full_path|urlencode }}">
                     {% trans "log out" %}
                 </a>

@@ -8,6 +8,7 @@
     <link href='//fonts.googleapis.com/css?family=RobotoDraft:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang={{ LANGUAGE_CODE }}' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icons.css' %}">
 </head>
 
 <body>
@@ -22,9 +23,11 @@
             </div>
         </header>
 
+        {% block search %}
         <form action="{% url 'site:search' %}" method="get" id="search">
             <input type="text" placeholder="{% trans "Movies" %}" value="{% block search_query %}{% endblock %}" name="q"/>
         </form>
+        {% endblock %}
 
         <div id="content">
             {% block content %}{% endblock %}
