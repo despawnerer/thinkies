@@ -6,11 +6,13 @@ from social.apps.django_app.utils import BACKENDS
 
 
 PROVIDER_NAMES = {
+    'vk-oauth2': 'vk',
     'facebook': 'facebook',
     'twitter': 'twitter',
 }
 
 PROVIDER_VERBOSE_NAMES = {
+    'vk-oauth2': _("VKontakte"),
     'facebook': _("Facebook"),
     'twitter': _("Twitter"),
 }

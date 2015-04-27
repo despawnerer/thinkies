@@ -84,6 +84,7 @@ AUTH_USER_MODEL = 'users.User'
 AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth',
     'social.backends.facebook.Facebook2OAuth2',
+    'social.backends.vk.VKOAuth2',
 )
 
 SOCIAL_AUTH_PIPELINE = (
