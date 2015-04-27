@@ -56,6 +56,9 @@ h1 {
     color: red;
 }
 
+
+/* User pictures */
+
 .user-picture {
     position: relative;
     display: inline-block;
@@ -80,6 +83,32 @@ a:hover .user-picture::after {
     opacity: 0.2;
     content: ' ';
 }
+
+
+/* Brand icons */
+
+.brand-icon {
+    font-size: 1em;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.brand-icon.icon-twitter { color: #55ACEE; }
+.brand-icon.icon-facebook { color: #3b5998; }
+.brand-icon.icon-vk { color: #597DA3; }
+
+.brand-button {
+    padding: 0.3em 0.8em 0.3em 0.5em;
+}
+
+.brand-button .brand-icon {
+    color: inherit;
+    margin-right: 5px;
+}
+
+.brand-button.facebook { color: white; background: #3b5998; }
+.brand-button.twitter { color: white; background: #55ACEE; }
+.brand-button.vk { color: white; background: #597DA3; }
 
 
 /* Base styles */
@@ -221,29 +250,6 @@ a:hover .user-picture::after {
 #user-area .user-picture img {
     height: 3rem;
 }
-
-.provider-icon {
-    font-size: 1em;
-    vertical-align: middle;
-    display: inline-block;
-}
-
-.provider-icon.icon-twitter { color: #55ACEE; }
-.provider-icon.icon-facebook { color: #3b5998; }
-.provider-icon.icon-vk { color: #597DA3; }
-
-.provider-button {
-    padding: 0.3em 0.8em 0.3em 0.5em;
-}
-
-.provider-button .provider-icon {
-    color: inherit;
-    margin-right: 5px;
-}
-
-.provider-button.facebook { color: white; background: #3b5998; }
-.provider-button.twitter { color: white; background: #55ACEE; }
-.provider-button.vk-oauth2 { color: white; background: #597DA3; }
 
 
 /* Search */
