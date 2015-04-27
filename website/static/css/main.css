@@ -69,7 +69,7 @@ h1 {
     height: 1em;
 }
 
-a:hover .user-picture.user-picture::after {
+a:hover .user-picture::after {
     display: block;
     position: absolute;
     width: 100%;
@@ -354,7 +354,6 @@ a.poster:hover::after {
     flex-wrap: wrap;
     -webkit-flex-wrap: wrap;
 
-    margin: 0;
     padding: 0;
     list-style: none;
     margin: -20px;
