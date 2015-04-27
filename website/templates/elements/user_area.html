@@ -14,12 +14,12 @@
         <ul class="user-nav-list">
             <li>
                 <a href="{% url 'site:settings' %}">
-                    {% trans "settings" %}
+                    {% trans "Settings" %}
                 </a>
             </li>
             <li>
                 <a href="{% url 'logout' %}?next={{ request.get_full_path|urlencode }}">
-                    {% trans "log out" %}
+                    {% trans "Log out" %}
                 </a>
             </li>
         </ul>
@@ -28,7 +28,7 @@
 {% else %}
     {% for backend in backends.backends %}
         <a href="{% url 'social:begin' backend=backend %}?next={{ request.get_full_path|urlencode }}" class="button">
-            {% blocktrans with backend=backend %}log in with {{ backend }}{% endblocktrans %}
+            {% blocktrans with backend=backend %}Log in with {{ backend }}{% endblocktrans %}
         </a>
     {% endfor %}
 {% endif %}

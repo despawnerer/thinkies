@@ -1,7 +1,7 @@
 {% load staticfiles i18n assets %}<!doctype html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-    <title>{% block title %}{% trans 'thinkies' %}{% endblock %}</title>
+    <title>{% block title %}{% trans 'Thinkies' %}{% endblock %}</title>
 
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
@@ -15,7 +15,7 @@
     <div id="main-container">
         <header id="main-toolbar">
             <div id="logo-area">
-                <a href="{% url 'site:index' %}" id="logo">{% trans 'thinkies' %}</a>
+                <a href="{% url 'site:index' %}" id="logo">{% trans 'Thinkies' %}</a>
                 {% include 'elements/language_chooser.html' %}
             </div>
             <div id="user-area">

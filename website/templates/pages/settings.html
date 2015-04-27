@@ -2,16 +2,16 @@
 
 {% load i18n %}
 
-{% block title %}{% trans "settings — thinkies" %}{% endblock %}
+{% block title %}{% trans "Settings — Thinkies" %}{% endblock %}
 {% block search %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "settings" %}</h1>
+<h1>{% trans "Settings" %}</h1>
 
 
 {% if identities|length > 1 %}
 <section>
-<h2>{% trans "post as" %}</h2>
+<h2>{% trans "Post as" %}</h2>
 <ul class="identity-list">
     {% for identity in identities %}
     <li>
@@ -35,7 +35,7 @@
 {% endif %}
 
 <section>
-<h2>{% trans "accounts" %}</h2>
+<h2>{% trans "Accounts" %}</h2>
 <ul class="account-list">
     {% for provider in provider_details %}
     <li>
@@ -43,14 +43,14 @@
         {% if not provider.is_associated %}
             <a href="{% url 'social:begin' backend=provider.backend_name %}?next={{ request.get_full_path|urlencode }}" class="button provider-button {{ provider.backend_name }}">
                 <span class="provider-icon icon-{{ provider.name }}"></span>
-                {% trans "connect" %}
+                {% trans "Connect" %}
             </a>
         {% elif identities|length > 1 %}
             <form action="{% url 'social:disconnect' backend=provider.backend_name %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
                 <button class="button {{ provider.name }}-button" id="{{ provider.name }}-button">
-                {% trans "disconnect" %}
+                {% trans "Disconnect" %}
                 </button>
             </form>
         {% else %}
