@@ -109,7 +109,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
     'users.social_auth.create_identity',
-    'users.social_auth.send_signal'
+    'users.social_auth.update_identity',
 )
 
 SOCIAL_AUTH_TWITTER_KEY = 'ByaSI7W75mLRTcWCjd5gHRn7O'

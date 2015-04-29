@@ -1,5 +1,5 @@
 from .models import User, Identity
-from .signals import social_auth_complete
+from .actions import update_identity as do_update_identity
 
 
 def create_user(strategy, details, user=None, *args, **kwargs):
@@ -25,6 +25,5 @@ def create_identity(user, backend, details, uid, **kwargs):
     return {'identity': identity}
 
 
-def send_signal(user, backend, **kwargs):
-    social_auth_complete.send(
-        sender=user.__class__, user=user, backend=backend)
+def update_identity(user, backend, **kwargs):
+    do_update_identity(user, backend.name)
