@@ -37,8 +37,8 @@
         <ul class="account-list">
             {% for provider in auth_providers %}
             <li>
-                <label class="account-label">{{ provider.verbose_name }}</label>
                 {% if not provider.is_associated %}
+                    <label class="account-label">{{ provider.verbose_name }}</label>
                     <a href="{% url 'social:begin' backend=provider.backend_name %}?next={{ request.get_full_path|urlencode }}" class="button brand-button {{ provider.backend_name }}">
                         <span class="brand-icon icon-{{ provider.name }}"></span>
                         {% trans "Connect" %}
@@ -47,11 +47,13 @@
                     <form action="{% url 'social:disconnect' backend=provider.backend_name %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+                        <label class="account-label">{{ provider.verbose_name }}</label>
                         <button class="button {{ provider.name }}-button">
                         {% trans "Disconnect" %}
                         </button>
                     </form>
                 {% else %}
+                    <label class="account-label">{{ provider.verbose_name }}</label>
                     {% trans "logged in" %}
                 {% endif %}
             </li>
