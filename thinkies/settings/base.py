@@ -47,8 +47,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'website.middleware.location.LocationMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+
     'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
+
+    'website.middleware.location.LocationMiddleware',
 )
 
 TEMPLATES = [
