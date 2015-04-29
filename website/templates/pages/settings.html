@@ -15,7 +15,7 @@
         <ul class="identity-list">
             {% for identity, widget in identity_widgets %}
             <li>
-                <label class="identity-label" for="{{ subwidget.id_for_label }}">
+                <label class="identity-label" for="{{ widget.id_for_label }}">
                     {{ widget.tag }}
 
                     <span class="icon-{{ identity.provider }} brand-icon"></span>
