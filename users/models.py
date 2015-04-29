@@ -56,6 +56,7 @@ class Identity(models.Model):
     image = models.ImageField(null=True)
 
     class Meta:
+        ordering = ('name',)
         unique_together = ('user', 'provider')
 
     def __str__(self):
