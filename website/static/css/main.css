@@ -36,7 +36,7 @@ h1 {
 
 .button {
     display: inline-block;
-    padding: 0.2em 0.5em;
+    padding: 0.5em 1em;
     background: #f1f1f1;
     color: #333;
     text-decoration: none;
@@ -96,10 +96,6 @@ a:hover .user-picture::after {
 .brand-icon.icon-twitter { color: #55ACEE; }
 .brand-icon.icon-facebook { color: #3b5998; }
 .brand-icon.icon-vk { color: #597DA3; }
-
-.brand-button {
-    padding: 0.3em 0.8em 0.3em 0.5em;
-}
 
 .brand-button .brand-icon {
     color: inherit;
