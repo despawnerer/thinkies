@@ -31,7 +31,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
     default_identity = models.OneToOneField(
-        'Identity', null=True, related_name='+')
+        'Identity', null=True, related_name='+', on_delete=models.SET_NULL)
 
     objects = UserManager()
 

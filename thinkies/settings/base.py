@@ -112,6 +112,14 @@ SOCIAL_AUTH_PIPELINE = (
     'users.social_auth.update_identity',
 )
 
+SOCIAL_AUTH_DISCONNECT_PIPELINE = (
+    'social.pipeline.disconnect.allowed_to_disconnect',
+    'social.pipeline.disconnect.get_entries',
+    'social.pipeline.disconnect.revoke_tokens',
+    'social.pipeline.disconnect.disconnect',
+    'users.social_auth.delete_identities',
+)
+
 SOCIAL_AUTH_TWITTER_KEY = 'ByaSI7W75mLRTcWCjd5gHRn7O'
 SOCIAL_AUTH_TWITTER_SECRET = '0gZSlM7c8sYa0zZx3upgbf1wYraQyQpqLxPEPY5b3cdLTvkn3T'
 
