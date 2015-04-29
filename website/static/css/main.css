@@ -494,13 +494,9 @@ a.poster:hover::after {
 }
 
 .identity-list {
-    margin: 0;
+    margin: 0.75em 0;
     padding: 0;
     list-style: none;
-}
-
-.identity-list > li {
-    margin: 1.5em 0;
 }
 
 .identity-radio {
@@ -509,8 +505,7 @@ a.poster:hover::after {
 
 .identity-label {
     display: block;
-    margin: -1.5em 0;
-    padding: 1.5em 0;
+    padding: 0.75em 0;
 }
 
 .identity-label .user-picture {
