@@ -6,59 +6,58 @@
 {% block search %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "Settings" %}</h1>
+<article id="settings">
+    <h1>{% trans "Settings" %}</h1>
 
+    {% if identities|length > 1 %}
+    <section>
+        <h2>{% trans "Post as" %}</h2>
+        <ul class="identity-list">
+            {% for identity, widget in identity_widgets %}
+            <li>
+                <label class="identity-label" for="{{ subwidget.id_for_label }}">
+                    {{ widget.tag }}
 
-{% if identities|length > 1 %}
-<section>
-<h2>{% trans "Post as" %}</h2>
-<ul class="identity-list">
-    {% for identity in identities %}
-    <li>
-        <label class="identity-label">
-            <input type="radio" name="identity" value="{{ identity.provider }}" class="identity-radio"
-                {% if identities|length == 1 %} disabled{% endif %}
-                {% if identity == user.default_identity %} checked{% endif %}/>
+                    <span class="icon-{{ identity.provider }} brand-icon"></span>
 
-            <span class="icon-{{ identity.provider }} brand-icon"></span>
+                    <span class="user-picture">
+                        <img src="{{ identity.image.url }}" alt="{{ identity.name }}"/>
+                    </span>
 
-            <span class="user-picture">
-                <img src="{{ identity.image.url }}" alt="{{ identity.name }}"/>
-            </span>
+                    {{ identity.name }}
+                </label>
+            </li>
+            {% endfor %}
+        </ul>
+    <section>
+    {% endif %}
 
-            {{ identity.name }}
-        </label>
-    </li>
-    {% endfor %}
-</ul>
-</section>
-{% endif %}
-
-<section>
-<h2>{% trans "Accounts" %}</h2>
-<ul class="account-list">
-    {% for provider in auth_providers %}
-    <li>
-        <label class="account-label">{{ provider.verbose_name }}</label>
-        {% if not provider.is_associated %}
-            <a href="{% url 'social:begin' backend=provider.backend_name %}?next={{ request.get_full_path|urlencode }}" class="button brand-button {{ provider.backend_name }}">
-                <span class="brand-icon icon-{{ provider.name }}"></span>
-                {% trans "Connect" %}
-            </a>
-        {% elif identities|length > 1 %}
-            <form action="{% url 'social:disconnect' backend=provider.backend_name %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
-                <button class="button {{ provider.name }}-button">
-                {% trans "Disconnect" %}
-                </button>
-            </form>
-        {% else %}
-            {% trans "logged in" %}
-        {% endif %}
-    </li>
-    {% endfor %}
-</ul>
-</section>
+    <section>
+    <h2>{% trans "Accounts" %}</h2>
+        <ul class="account-list">
+            {% for provider in auth_providers %}
+            <li>
+                <label class="account-label">{{ provider.verbose_name }}</label>
+                {% if not provider.is_associated %}
+                    <a href="{% url 'social:begin' backend=provider.backend_name %}?next={{ request.get_full_path|urlencode }}" class="button brand-button {{ provider.backend_name }}">
+                        <span class="brand-icon icon-{{ provider.name }}"></span>
+                        {% trans "Connect" %}
+                    </a>
+                {% elif identities|length > 1 %}
+                    <form action="{% url 'social:disconnect' backend=provider.backend_name %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+                        <button class="button {{ provider.name }}-button">
+                        {% trans "Disconnect" %}
+                        </button>
+                    </form>
+                {% else %}
+                    {% trans "logged in" %}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+</article>
 {% endblock %}
 

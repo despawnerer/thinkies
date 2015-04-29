@@ -489,6 +489,10 @@ a.poster:hover::after {
 
 /* Settings */
 
+#settings section {
+    margin-bottom: 2rem;
+}
+
 .identity-list {
     margin: 0;
     padding: 0;
@@ -497,8 +501,6 @@ a.poster:hover::after {
 
 .identity-list > li {
     margin: 1.5em 0;
-    height: 2rem;
-    line-height: 2rem;
 }
 
 .identity-radio {
