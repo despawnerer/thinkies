@@ -37,7 +37,7 @@
 <section>
 <h2>{% trans "Accounts" %}</h2>
 <ul class="account-list">
-    {% for provider in provider_details %}
+    {% for provider in auth_providers %}
     <li>
         <label class="account-label">{{ provider.verbose_name }}</label>
         {% if not provider.is_associated %}

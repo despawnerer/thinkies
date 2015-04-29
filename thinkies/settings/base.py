@@ -61,7 +61,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
-    'social.apps.django_app.context_processors.backends',
+
+    'users.context_processors.auth_providers',
 )
 
 ROOT_URLCONF = 'thinkies.urls'

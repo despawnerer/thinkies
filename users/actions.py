@@ -1,17 +1,44 @@
 from functools import reduce
 from operator import or_
 from urllib.request import urlopen
+from funcy import merge, collecting
 
 from django.core.files.base import ContentFile
 from django.db.models import Q
 from django.contrib.auth import get_user_model
+from django.utils.translation import get_language
 
 import services
 
 from .models import Identity
+from .consts import (
+    AUTH_BACKEND_DETAILS,
+    AUTH_BACKEND_ORDER_BY_LANGUAGE,
+    AUTH_BACKEND_ORDER_DEFAULT,
+)
 
 
-__all__ = ['get_friends', 'update_identity']
+__all__ = [
+    'get_auth_providers', 'get_friends', 'update_identity'
+]
+
+
+@collecting
+def get_auth_providers(user):
+    if user and user.is_authenticated():
+        associated_backends = {i.provider for i in user.identities.all()}
+    else:
+        associated_backends = set()
+
+    language = get_language()
+    backend_name_list = AUTH_BACKEND_ORDER_BY_LANGUAGE.get(
+        language, AUTH_BACKEND_ORDER_DEFAULT)
+    for backend_name in backend_name_list:
+        details = AUTH_BACKEND_DETAILS.get(backend_name)
+        yield merge(details, {
+            'backend_name': backend_name,
+            'is_associated': backend_name in associated_backends,
+        })
 
 
 def get_friends(user):

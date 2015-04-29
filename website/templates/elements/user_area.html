@@ -2,12 +2,12 @@
 
 {% if user.is_authenticated %}
 <div id="user-dropdown-box">
-    <a href="#" id="user-dropdown-toggle" data-toggle="#user-dropdown">
+    <a href="#" id="user-dropdown-toggle" data-toggle=".user-area-dropdown">
         <span class="user-picture">
             <img src="{{ user.default_identity.image.url }}" alt="{{ user.default_identity.name }}"/>
         </span>
     </a>
-    <nav id="user-dropdown" hidden>
+    <nav class="user-area-dropdown" hidden>
         <div id="user-dropdown-name">
             {{ user.default_identity.name }}
         </div>
@@ -26,9 +26,22 @@
     </nav>
 </div>
 {% else %}
-    {% for backend in backends.backends %}
-        <a href="{% url 'social:begin' backend=backend %}?next={{ request.get_full_path|urlencode }}" class="button">
-            {% blocktrans with backend=backend %}Log in with {{ backend }}{% endblocktrans %}
-        </a>
-    {% endfor %}
+<div id="login-dropdown-box">
+    <a href="#" class="button" data-toggle=".user-area-dropdown">
+        {% trans "Log in" %}
+    </a>
+    <nav class="user-area-dropdown" hidden>
+        <ul class="login-nav-list">
+        {% for provider in auth_providers %}
+            <li>
+                <a href="{% url 'social:begin' backend=provider.backend_name %}?next={{ request.get_full_path|urlencode }}" class="button brand-button {{ provider.name }}">
+                    <span class="icon-{{ provider.name }} brand-icon"></span>
+                {% blocktrans with provider=provider.verbose_name %}Log in with {{ provider }}{% endblocktrans %}
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+    </nav>
+</div>
+
 {% endif %}

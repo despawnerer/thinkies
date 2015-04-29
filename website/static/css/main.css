@@ -187,27 +187,30 @@ a:hover .user-picture::after {
     margin: -1rem 0;
 }
 
-#user-dropdown-box {
-    position: relative;
-}
-
-#user-dropdown {
+.user-area-dropdown {  /* generic user area dropdown, user for both non-logged-in and logged-in users */
     position: absolute;
-    right: -0.5rem;
-    top: -0.5rem;
-    width: 15rem;
     background: white;
-    z-index: 5;
     box-shadow: 1px 2px 5px #aaa;
     transition: 0.15s;
 }
 
-#user-dropdown[hidden] {
+.user-area-dropdown[hidden] {
     display: block;
     visibility: hidden;
     opacity: 0;
     transform-origin: right top;
     transform: scale(0.9);
+}
+
+#user-dropdown-box {
+    position: relative;
+}
+
+#user-dropdown-box .user-area-dropdown {
+    right: -0.5rem;
+    top: -0.5rem;
+    width: 15rem;
+    z-index: 5;
 }
 
 .user-nav-list {
@@ -251,6 +254,31 @@ a:hover .user-picture::after {
     height: 3rem;
 }
 
+
+#login-dropdown-box {
+    position: relative;
+}
+
+#login-dropdown-box .user-area-dropdown {
+    top: 100%;
+    right: -0.5rem;
+    z-index: 5;
+    margin-top: 0.5rem;
+}
+
+.login-nav-list {
+    padding: 0;
+    margin: 1rem;
+    list-style: none;
+}
+
+.login-nav-list > li {
+    margin: 1rem 0;
+}
+
+.login-nav-list .button {
+    width: 12rem;
+}
 
 /* Search */
 
@@ -473,6 +501,8 @@ a.poster:hover::after {
 
 .identity-list > li {
     margin: 1.5em 0;
+    height: 2rem;
+    line-height: 2rem;
 }
 
 .identity-radio {
@@ -496,7 +526,9 @@ a.poster:hover::after {
 }
 
 .account-list > li {
-    margin: 1.5em 0;
+    margin: 1.5rem 0;
+    height: 2rem;
+    line-height: 2rem;
 }
 
 .account-label {
