@@ -11,24 +11,28 @@
 
     {% if identities|length > 1 %}
     <section>
-        <h2>{% trans "Post as" %}</h2>
-        <ul class="identity-list">
-            {% for identity, widget in identity_widgets %}
-            <li>
-                <label class="identity-label" for="{{ widget.id_for_label }}">
-                    {{ widget.tag }}
+        <form action="." method="post">
+            {% csrf_token %}
+            <h2>{% trans "Post as" %}</h2>
+            <ul class="identity-list">
+                {% for identity, widget in identity_widgets %}
+                <li>
+                    <label class="identity-label" for="{{ widget.id_for_label }}">
+                        {{ widget.tag }}
 
-                    <span class="icon-{{ identity.provider }} brand-icon"></span>
+                        <span class="icon-{{ identity.provider }} brand-icon"></span>
 
-                    <span class="user-picture">
-                        <img src="{{ identity.image.url }}" alt="{{ identity.name }}"/>
-                    </span>
+                        <span class="user-picture">
+                            <img src="{{ identity.image.url }}" alt="{{ identity.name }}"/>
+                        </span>
 
-                    {{ identity.name }}
-                </label>
-            </li>
-            {% endfor %}
-        </ul>
+                        {{ identity.name }}
+                    </label>
+                </li>
+                {% endfor %}
+            </ul>
+            <button class="button">{% trans "Save" %}</button>
+        </form>
     </section>
     {% endif %}
 
