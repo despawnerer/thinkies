@@ -13,5 +13,5 @@ class SettingsForm(ModelForm):
         fields = ('default_identity',)
 
     def __init__(self, identities, *args, **kwargs):
-        super(SettingsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['default_identity'].queryset = identities

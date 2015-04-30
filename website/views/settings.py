@@ -21,7 +21,7 @@ class SettingsView(PrivateViewMixin, UpdateView):
         return context
 
     def get_form_kwargs(self):
-        form_kwargs = super(SettingsView, self).get_form_kwargs()
+        form_kwargs = super().get_form_kwargs()
         form_kwargs['identities'] = self.identities
         return form_kwargs
 
