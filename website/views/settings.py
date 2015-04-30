@@ -11,13 +11,13 @@ class SettingsView(PrivateViewMixin, UpdateView):
     form_class = SettingsForm
     success_url = reverse_lazy('site:settings')
 
-    def get_context_data(self, form, **kwargs):
-        context = {
-            'form': form,
+    def get_context_data(self, **kwargs):
+        form = kwargs.get('form')
+        context = super().get_context_data(**kwargs)
+        context.update({
             'identities': self.identities,
             'identity_widgets': zip(self.identities, form['default_identity'])
-        }
-        context.update(kwargs)
+        })
         return context
 
     def get_form_kwargs(self):
