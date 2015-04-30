@@ -11,7 +11,7 @@ from movies.models import Movie, Localization
 from movies.consts import SEARCHABLE_LANGUAGES
 from movies import search
 
-from opinions.models import Opinion
+from opinions.models import Tip
 
 from users.actions import get_friends
 
@@ -37,13 +37,13 @@ class SearchView(ListView):
         prefetch_localizations = Prefetch(
             'localizations',
             queryset=Localization.objects.filter(language=get_language()))
-        prefetch_opinions = Prefetch(
-            'opinions', to_attr='friend_opinions',
-            queryset=Opinion.objects.filter(author__in=friends))
+        prefetch_tips = Prefetch(
+            'tips', to_attr='friend_tips',
+            queryset=Tip.objects.filter(author__in=friends))
         movies = (
             Movie.objects
             .filter(imdb_id__in=imdb_ids)
-            .prefetch_related(prefetch_localizations, prefetch_opinions))
+            .prefetch_related(prefetch_localizations, prefetch_tips))
         movies_by_imdb_id = {m.imdb_id: m for m in movies}
         return [movies_by_imdb_id[result.imdb_id] for result in results]
 

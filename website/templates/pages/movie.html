@@ -5,8 +5,8 @@
 {% block title %}{% blocktrans with title=movie.translated_title %}{{ title }} — Thinkies{% endblocktrans %}{% endblock %}
 
 {% block content %}
-<div style="display: flex; flex-direction: row;">
-    <div style="width: 25%; flex: none; margin-right: 20px;">
+<article id="movie">
+    <div class="poster-box">
         <div class="poster" style="width: 100%;">
             {% if movie.poster %}
             <img src="{{ movie.poster.url }}" class="poster-content"/>
@@ -17,7 +17,7 @@
             {% endif %}
         </div>
     </div>
-    <div>
+    <div style="flex: 1">
         <h1>{{ movie.translated_title }}</h1>
         <ul class="movie-info">
             <li>{{ movie.year }}</li>
@@ -29,6 +29,30 @@
             <li><a href="//{{ movie.localization.language }}.wikipedia.org/wiki/{{ movie.localization.wikipedia_page }}" target="_blank" rel="nofollow">{% trans "Wikipedia" %}</a></li>
             {% endif %}
         </ul>
+        {% if user.is_authenticated %}
+        <form action="." method="post" class="tip-form">
+            {% csrf_token %}
+            <span class="user-picture"><img src="{{ user.default_identity.image.url }}"/></span>
+            {{ tip_form.text }}
+            <button class="button">{% trans "Post" %}</button>
+        </form>
+        {% endif %}
+        <ul class="tip-list">
+        {% for tip in tip_list %}
+            <li class="tip">
+                <div class="author">
+                    <span class="user-picture"><img src="{{ tip.author.default_identity.image.url }}"/></span>
+                    {{ tip.author.default_identity.name }}
+                </div>
+                <p>
+                    {{ tip }}
+                </p>
+                <footer>
+                    {{ tip.creation_date }}
+                </footer>
+            </li>
+        {% endfor %}
+        </ul>
     </div>
-</div>
+</article>
 {% endblock %}

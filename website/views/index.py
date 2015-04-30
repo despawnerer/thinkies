@@ -7,7 +7,7 @@ from django.db.models import Prefetch
 
 from users.actions import get_friends
 
-from opinions.models import Opinion
+from opinions.models import Tip
 
 from movies.models import Localization, Movie
 from movies.consts import THEATRICAL_RUN_LOCATIONS
@@ -22,9 +22,9 @@ class Index(ListView):
         prefetch_localizations = Prefetch(
             'localizations',
             queryset=Localization.objects.filter(language=get_language()))
-        prefetch_opinions = Prefetch(
-            'opinions', to_attr='friend_opinions',
-            queryset=Opinion.objects.filter(author__in=friends))
+        prefetch_tips = Prefetch(
+            'tips', to_attr='friend_tips',
+            queryset=Tip.objects.filter(author__in=friends))
 
         if self.request.location:
             qs = self.get_queryset_for_location(self.request.location)
@@ -32,7 +32,7 @@ class Index(ListView):
             qs = self.get_generic_queryset()
 
         return qs.prefetch_related(
-            prefetch_localizations, prefetch_opinions)[:50]
+            prefetch_localizations, prefetch_tips)[:50]
 
     def get_queryset_for_location(self, location):
         country, city = location

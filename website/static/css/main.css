@@ -528,3 +528,84 @@ a.poster:hover::after {
     display: inline-block;
     width: 6em;
 }
+
+
+/* Movie page */
+
+#movie {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+}
+
+#movie .poster-box {
+    flex: none;
+    -webkit-flex: none;
+
+    width: 25%;
+    margin-right: 20px;
+}
+
+.tip-form {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    align-items: flex-start;
+    -webkit-align-items: flex-start;
+
+    margin: 1.5rem 0;
+}
+
+.tip-form .user-picture {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+
+    flex: none;
+    -webkit-flex: none;
+}
+
+.tip-form textarea {
+    margin-right: 1rem;
+    flex: 1;
+    -webkit-flex: 1;
+    font-size: 1em;
+    height: 4em;
+    box-sizing: border-box;
+    border: 0;
+    padding: 0.6em 0.8em;
+    box-shadow: 1px 2px 5px #aaa;
+    background: white;
+}
+
+.tip-form textarea:focus {
+    outline: 0;
+    box-shadow: 2px 3px 8px #999;
+}
+
+.tip-form .button {
+    flex: none;
+    -webkit-flex: none;
+}
+
+
+.tip-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tip-list > li {
+    margin: 2rem 0;
+}
+
+.tip p {
+    font-size: 1.1em;
+    margin: 0.5rem 0;
+}
+
+.tip footer {
+    font-size: 0.8em;
+    color: #AAA;
+}
