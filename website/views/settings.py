@@ -3,8 +3,10 @@ from django.core.urlresolvers import reverse_lazy
 
 from ..forms.settings import SettingsForm
 
+from .mixins import PrivateViewMixin
 
-class SettingsView(UpdateView):
+
+class SettingsView(PrivateViewMixin, UpdateView):
     template_name = 'pages/settings.html'
     form_class = SettingsForm
     success_url = reverse_lazy('site:settings')
