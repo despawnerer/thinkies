@@ -12,10 +12,11 @@ def update():
     logger.info("Beginning update")
     total = 0
     for item in omdb.load_latest():
-        update_item(item)
-        total += 1
-        if total % 1000 == 0:
-            logger.info("Updated %d movies" % total)
+        if item.type == 'movie':
+            update_item(item)
+            total += 1
+            if total % 1000 == 0:
+                logger.info("Updated %d movies" % total)
     logger.info("Updated %d movies" % total)
     logger.info("Finished")
 

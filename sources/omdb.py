@@ -26,8 +26,12 @@ def get_latest_filename():
         for filename in os.listdir(settings.OMDB_DATA_DIR))
     non_hidden = filter(lambda x: not x.startswith('.'), all_entries)
     only_directories = filter(os.path.isdir, non_hidden)
-    newest_entry = max(only_directories, key=os.path.getctime)
-    return os.path.join(newest_entry, 'omdb.txt')
+    newest_directory = max(only_directories, key=os.path.getctime)
+    possible_filenames = ('omdb.txt', 'omdbFull.txt', 'omdbMovies.txt')
+    for filename in possible_filenames:
+        file_path = os.path.join(newest_directory, filename)
+        if os.path.isfile(file_path):
+            return file_path
 
 
 # data classes
@@ -73,6 +77,10 @@ class Item:
     @cached_property
     def last_updated(self):
         return self.get_date('lastUpdated')
+
+    @cached_property
+    def type(self):
+        return self.data['Type']
 
     # helpers
 
