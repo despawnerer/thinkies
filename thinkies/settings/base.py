@@ -166,6 +166,10 @@ WIKIDATA_DIR = os.path.join(DATA_DIR, 'wikidata')
 WIKIDATA_MONGO_HOST = 'localhost'
 WIKIDATA_MONGO_DATABASE = 'test'
 
+WIKIPEDIA_DATA_DIR = os.path.join(DATA_DIR, 'wikipedia')
+WIKIPEDIA_MONGO_HOST = 'localhost'
+WIKIPEDIA_MONGO_DATABASE = 'wikipedia'
+
 OMDB_DATA_DIR = os.path.join(DATA_DIR, 'omdb')
 
 
@@ -224,6 +228,10 @@ LOGGING = {
             'propagate': False,
         },
         'movies.maintenance': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'sources': {
             'handlers': ['console'],
             'level': 'INFO',
         }
