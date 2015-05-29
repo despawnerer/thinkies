@@ -1,10 +1,16 @@
 import bz2
 import logging
+import os
+import posixpath
+import feedparser
 from lxml import etree
+from urllib.parse import urlparse
 
 from pymongo import MongoClient
 
 from django.conf import settings
+
+from .utils import download
 
 
 logger = logging.getLogger(__name__)
@@ -50,8 +56,31 @@ def update_from_file(language, filename):
 
 
 def download_latest_dump(language):
-    logger.info("Downloading latest %swiki dump...")
-    raise NotImplementedError
+    logger.info("Downloading latest %swiki dump..." % language)
+
+    url = get_latest_dump_url(language)
+    parsed_url = urlparse(url)
+    path, filename = posixpath.split(parsed_url.path)
+
+    local_file_path = os.path.join(settings.WIKIPEDIA_DATA_DIR, filename)
+    if os.path.isfile(local_file_path):
+        logger.info('Already at the latest version.')
+    else:
+        download(url, local_file_path)
+
+    return local_file_path
+
+
+def get_latest_dump_url(language):
+    rss_url = ('https://dumps.wikimedia.org/{0}wiki/latest/'
+               '{0}wiki-latest-pages-articles.xml.bz2-rss.xml').format(language)
+    d = feedparser.parse(rss_url)
+    # this is all kind of a error-prone way to get the latest url,
+    # but it works for now so eh. FIXME some time.
+    dump_path = d.entries[0].link
+    dump_date = dump_path[-8:]
+    return '{}/{}wiki-{}-pages-articles.xml.bz2'.format(
+        dump_path, language, dump_date)
 
 
 # parsing dumps
