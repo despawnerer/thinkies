@@ -5,6 +5,8 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import get_language
 from django.contrib.postgres.fields import ArrayField
 
+from thinkies.utils import get_hashed_file_upload_path
+
 
 class Movie(models.Model):
     title = models.CharField(max_length=255)
@@ -80,7 +82,8 @@ class Poster(models.Model):
     source_updated = models.DateTimeField(null=True)
 
     image = models.ImageField(
-        null=True, width_field='width', height_field='height')
+        null=True, width_field='width', height_field='height',
+        upload_to=get_hashed_file_upload_path)
     image_updated = models.DateTimeField(null=True)
 
     width = models.PositiveIntegerField(null=True)
