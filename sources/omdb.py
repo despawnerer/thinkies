@@ -56,6 +56,10 @@ class Item:
     def released(self):
         return self.get_date('Released')
 
+    @cached_property
+    def poster(self):
+        return self.get('Poster', None)
+
     # imdb data
 
     @cached_property

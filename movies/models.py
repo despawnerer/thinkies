@@ -11,7 +11,8 @@ class Movie(models.Model):
     year = models.IntegerField()
     mpaa_rating = models.CharField(max_length=24)
     release_date = models.DateField(null=True)
-    poster = models.ImageField(null=True)
+    poster = models.OneToOneField(
+        'Poster', null=True, on_delete=models.SET_NULL)
 
     imdb_id = models.CharField(max_length=50, unique=True)
     imdb_rating = models.FloatField(null=True)
@@ -72,6 +73,18 @@ class Localization(models.Model):
 
     def __str__(self):
         return '%s (%s)' % (self.title, self.language)
+
+
+class Poster(models.Model):
+    source_url = models.URLField(null=True)
+    source_updated = models.DateTimeField(null=True)
+
+    image = models.ImageField(
+        null=True, width_field='width', height_field='height')
+    image_updated = models.DateTimeField(null=True)
+
+    width = models.PositiveIntegerField(null=True)
+    height = models.PositiveIntegerField(null=True)
 
 
 class TheatricalDay(models.Model):

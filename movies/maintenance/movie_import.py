@@ -1,8 +1,11 @@
 import logging
 
+from django.db import transaction
+from django.utils.timezone import now
+
 from sources import omdb
 
-from ..models import Movie
+from ..models import Movie, Poster
 
 
 logger = logging.getLogger(__name__)
@@ -10,20 +13,32 @@ logger = logging.getLogger(__name__)
 
 def update():
     logger.info("Beginning update")
-    total = 0
-    for item in omdb.load_latest():
+    for n, item in enumerate(omdb.load_latest()):
         if item.type == 'movie':
             update_item(item)
-            total += 1
-            if total % 1000 == 0:
-                logger.info("Updated %d movies" % total)
-    logger.info("Updated %d movies" % total)
+            if n % 1000 == 0:
+                logger.info("Updated %d movies" % n)
+    logger.info("Updated %d movies" % n)
     logger.info("Finished")
 
 
+@transaction.atomic
 def update_item(item):
-    return Movie.objects.update_or_create(
+    movie, created = Movie.objects.update_or_create(
         imdb_id=item.imdb_id, defaults=item_to_updated_fields(item))
+
+    if item.poster:
+        poster = movie.poster or Poster()
+        if poster.source_url != item.poster:
+            poster.source_url = item.poster
+            poster.source_updated = now()
+            poster.save()
+
+        if not movie.poster:
+            movie.poster = poster
+            movie.save(update_fields=['poster'])
+    else:
+        Poster.objects.filter(movie=movie).delete()
 
 
 def item_to_updated_fields(item):
