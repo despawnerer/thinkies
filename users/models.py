@@ -8,6 +8,8 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 
+from thinkies.utils import get_hashed_file_upload_path
+
 
 class UserManager(BaseUserManager):
     def create_superuser(self, email, password):
@@ -53,7 +55,8 @@ class Identity(models.Model):
     uid = models.CharField(max_length=255)
     friend_uids = ArrayField(models.CharField(max_length=255), default=[])
     name = models.CharField(max_length=255)
-    image = models.ImageField(null=True)
+    image = models.ImageField(
+        null=True, upload_to=get_hashed_file_upload_path)
 
     class Meta:
         ordering = ('name',)
