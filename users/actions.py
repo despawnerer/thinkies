@@ -1,14 +1,14 @@
 from functools import reduce
 from operator import or_
-from urllib.request import urlopen
 from funcy import merge, collecting
 
-from django.core.files.base import ContentFile
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.utils.translation import get_language
 
 import services
+
+from thinkies.utils import load_url
 
 from .models import Identity
 from .consts import (
@@ -72,17 +72,6 @@ def update_identity(user, provider):
             'uid': profile.uid,
             'friend_uids': list(friend_uids),
             'name': profile.name,
-            'image': _load_url(profile.image,
-                               '{}_{}'.format(provider, user.pk)),
+            'image': load_url(profile.image,
+                              '{}_{}'.format(provider, user.pk)),
         })
-
-
-def _load_url(url, name):
-    if url is None:
-        return None
-
-    # TODO: error handling
-    url_content = urlopen(url)
-    type_ = url_content.headers.get_content_subtype()
-    full_name = '{}.{}'.format(name, type_)
-    return ContentFile(url_content.read(), full_name)
