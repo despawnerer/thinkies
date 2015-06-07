@@ -73,5 +73,5 @@ def update_identity(user, provider):
             'friend_uids': list(friend_uids),
             'name': profile.name,
             'image': load_url(profile.image,
-                              '{}_{}'.format(provider, user.pk)),
+                              'identity_{}_{}'.format(user.pk, provider)),
         })
