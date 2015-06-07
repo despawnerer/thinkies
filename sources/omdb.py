@@ -80,7 +80,8 @@ class Item:
 
     @cached_property
     def type(self):
-        return self.data['Type']
+        # assume lack of type column to mean 'movie'
+        return self.get('Type', 'movie')
 
     # helpers
 
