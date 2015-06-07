@@ -94,7 +94,7 @@ class Item:
 
     def get(self, key, default=None):
         value = self.data.get(key, default)
-        if value == 'N/A':
+        if value in ['N/A', '']:
             return default
         else:
             return value
