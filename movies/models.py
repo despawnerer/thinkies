@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language
 from django.contrib.postgres.fields import ArrayField
@@ -34,14 +33,6 @@ class Movie(models.Model):
     @property
     def imdb_url(self):
         return 'http://www.imdb.com/title/%s' % self.imdb_id
-
-    @property
-    def is_released(self):
-        today = timezone.now().date()
-        if self.release_date:
-            return self.release_date <= today
-        else:
-            return self.year < today.year
 
 
     @property
