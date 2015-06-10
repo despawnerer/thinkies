@@ -9,6 +9,8 @@ from sources import wikidata
 
 from ..models import Localization
 
+from ..consts import SEARCHABLE_LANGUAGES
+
 
 logger = logging.getLogger(__name__)
 
@@ -75,11 +77,11 @@ def get_all_localizations():
 
 def get_languages_for_item(item):
     return set(
-        concat(
+        language for language in concat(
             [site[:-4] for site in item.sitelinks if site.endswith('wiki')],
             item.labels.keys(),
             item.descriptions.keys(),
-        )
+        ) if language in SEARCHABLE_LANGUAGES
     )
 
 
