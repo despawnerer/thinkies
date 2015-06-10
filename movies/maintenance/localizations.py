@@ -5,11 +5,14 @@ from langdetect.lang_detect_exception import LangDetectException
 from funcy import concat
 from itertools import product
 
-from sources import wikidata
+from django.db import transaction
 
-from ..models import Localization
+from thinkies.utils import get_md5
+
+from sources import wikidata, wikipedia
 
 from ..consts import SEARCHABLE_LANGUAGES
+from ..models import Localization, Poster
 
 
 logger = logging.getLogger(__name__)
@@ -37,6 +40,11 @@ FILM_TYPE_REFERENCES = [
     for id_ in FILM_TYPE_Q_IDS
 ]
 
+FILE_PAGE_TITLE_FORMATS = {
+    'en': 'File:%s',
+    'ru': 'Файл:%s',
+}
+
 
 # TODO: support more languages here
 clean_title_re = re.compile(
@@ -49,33 +57,70 @@ clean_title_re = re.compile(
     r')\)$')
 
 
+# overall process
+
 def update():
     logger.info("Beginning update")
-    total = 0
-    for imdb_id, language, localization_data in get_all_localizations():
-        Localization.objects.update_or_create(
-            movie_id=imdb_id, language=language,
-            defaults=localization_data)
-        total += 1
-        if total % 1000 == 0:
-            logger.info("Updated %d localizations" % total)
-    logger.info("Updated %d localizations" % total)
+    n = 0
+    for n, item in enumerate(get_movie_items()):
+        update_item(item)
+        if n > 0 and n % 1000 == 0:
+            logger.info("Updated localizations for %d movies" % n)
+    logger.info("Updated localizations for %d movies" % n)
     logger.info("Finished")
 
 
-def get_all_localizations():
-    for item in get_movie_items():
-        imdb_id_list = item.properties[P_IMDB_ID]
-        language_list = get_languages_for_item(item)
-        for imdb_id, language in product(imdb_id_list, language_list):
-            localization_data = get_localization_data_from_item(item, language)
-            yield imdb_id, language, localization_data
-        if len(imdb_id_list) > 1:
-            logger.warning("Multiple IMDb ids for single item: %s"
-                           % ', '.join(imdb_id_list))
+def get_movie_items():
+    collection = wikidata.get_collection()
+
+    results = collection.find({
+        'claims.P31.mainsnak.datavalue.value': {'$in': FILM_TYPE_REFERENCES},
+        'claims.P345.mainsnak.datavalue.value': {'$exists': True},
+    }, fields=[
+        'labels', 'descriptions', 'aliases', 'sitelinks',
+        'claims.P345.mainsnak.datavalue'
+    ], timeout=False)
+
+    return map(wikidata.Item, results)
 
 
-def get_languages_for_item(item):
+# actual updating code
+
+def update_item(item):
+    imdb_id_list = item.properties[P_IMDB_ID]
+    language_list = get_languages(item)
+    for imdb_id, language in product(imdb_id_list, language_list):
+        update_item_localization(item, imdb_id, language)
+
+    if len(imdb_id_list) > 1:
+        logger.warning("Multiple IMDb ids for single item: %s"
+                       % ', '.join(imdb_id_list))
+
+
+@transaction.atomic
+def update_item_localization(item, imdb_id, language):
+    localization, created = Localization.objects.update_or_create(
+        movie_id=imdb_id, language=language,
+        defaults=get_localization_data(item, language))
+
+    poster_source = get_poster_source(localization.wikipedia_page, language)
+    if poster_source:
+        poster_url, poster_updated = poster_source
+        poster = localization.poster or Poster()
+        if (poster.source_url != poster_url or
+                poster.source_updated != poster_updated):
+            poster.source_url = poster_url
+            poster.source_updated = poster_updated
+            poster.save()
+
+        if not localization.poster:
+            localization.poster = poster
+            localization.save(update_fields=['poster'])
+    else:
+        Poster.objects.filter(localization=localization).delete()
+
+
+def get_languages(item):
     return set(
         language for language in concat(
             [site[:-4] for site in item.sitelinks if site.endswith('wiki')],
@@ -85,7 +130,7 @@ def get_languages_for_item(item):
     )
 
 
-def get_localization_data_from_item(item, language):
+def get_localization_data(item, language):
     wikipedia_page = item.sitelinks.get(language + 'wiki', '')
     label = item.labels.get(language, '')
     description = item.descriptions.get(language, '')
@@ -148,17 +193,38 @@ def clean_title(title):
     return title.strip()
 
 
-def get_movie_items():
-    collection = wikidata.get_collection()
+def get_poster_source(page_title, language):
+    """
+    Find the poster on the given wikipedia page.
+    Return a tuple of (url, last_update_timestamp)
+    """
+    # TODO: log errors
+    collection = wikipedia.get_collection(language)
 
-    results = collection.find({
-        'claims.P31.mainsnak.datavalue.value': {'$in': FILM_TYPE_REFERENCES},
-        'claims.P345.mainsnak.datavalue.value': {'$exists': True},
-    }, fields=[
-        'labels', 'descriptions', 'aliases', 'sitelinks',
-        'claims.P345.mainsnak.datavalue'
-    ], timeout=False)
+    movie_page = collection.find_one({'title': page_title})
+    if not movie_page:
+        return None
 
-    logger.info("Total movie items: %d", results.count())
+    # find the poster's filename on the page
+    # the intuition here is that it's probably gonna be the first image
+    text = movie_page.get('revision', {}).get('text', '')
+    found_filenames = re.findall(r'[=:]\s*(.+\.(?:jpg|png))', text)
+    if len(found_filenames) == 0:
+        return None
+    filename = found_filenames[0]
 
-    return map(wikidata.Item, results)
+    # get the time of the last update of the file
+    file_page_title = FILE_PAGE_TITLE_FORMATS.get(
+        language, 'File:%s') % filename
+    file_page = collection.find_one({'title': file_page_title})
+    if not file_page:
+        return None
+    file_updated = file_page.get('revision', {}).get('timestamp')
+
+    # generate the filename
+    sane_filename = filename.replace(' ', '_')
+    hashed_filename = get_md5(sane_filename)
+    file_url = 'https://upload.wikimedia.org/wikipedia/{0}/{1}/{2}/{3}'.format(
+        language, hashed_filename[0], hashed_filename[:2], sane_filename)
+
+    return file_url, file_updated
