@@ -32,8 +32,7 @@ class Movie(models.Model):
 
     @property
     def imdb_url(self):
-        return 'http://www.imdb.com/title/%s' % self.imdb_id
-
+        return '//www.imdb.com/title/%s' % self.imdb_id
 
     @property
     def localizations_by_language(self):
