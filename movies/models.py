@@ -52,7 +52,8 @@ class Localization(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     aliases = ArrayField(models.CharField(max_length=255), default=[])
-    poster = models.ImageField(null=True)
+    poster = models.OneToOneField(
+        'Poster', null=True, on_delete=models.SET_NULL)
     wikipedia_page = models.CharField(max_length=1024)
 
     class Meta:
