@@ -94,7 +94,7 @@ def get_localization_data_from_item(item, language):
         'wikipedia_page': wikipedia_page,
         'title': title[:255],
         'description': description,
-        'aliases': map(lambda x: x[:255], aliases),
+        'aliases': list(map(lambda x: x[:255], aliases)),
     }
 
 
