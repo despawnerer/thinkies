@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 def update():
     logger.info("Beginning update")
+    n = 0
     for n, item in enumerate(omdb.load_latest()):
         if item.type == 'movie':
             update_item(item)
