@@ -2,31 +2,25 @@
 
 {% load i18n %}
 
-{% block title %}{% blocktrans with title=movie.translated_title %}{{ title }} — Thinkies{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans with title=movie.translated.title %}{{ title }} — Thinkies{% endblocktrans %}{% endblock %}
 
 {% block content %}
 <article id="movie">
     <div class="poster-box">
         <div class="poster" style="width: 100%;">
-            {% if movie.poster %}
-            <img src="{{ movie.poster.url }}" class="poster-content"/>
-            {% else %}
-            <span class="poster-content fake-poster">
-                <span>{{ movie.translated_title }}</span>
-            </span>
-            {% endif %}
+            {% include 'details/poster_content.html' with movie=movie %}
         </div>
     </div>
     <div style="flex: 1">
-        <h1>{{ movie.translated_title }}</h1>
+        <h1>{{ movie.translated.title }}</h1>
         <ul class="movie-info">
             <li>{{ movie.year }}</li>
             {% if movie.mpaa_rating %}
             <li>{{ movie.mpaa_rating }}</li>
             {% endif %}
             <li><a href="{{ movie.imdb_url }}" target="_blank" rel="nofollow">IMDb{% if movie.imdb_rating %} {{ movie.imdb_rating }}{% endif %}</a></li>
-            {% if movie.localization.wikipedia_page %}
-            <li><a href="//{{ movie.localization.language }}.wikipedia.org/wiki/{{ movie.localization.wikipedia_page }}" target="_blank" rel="nofollow">{% trans "Wikipedia" %}</a></li>
+            {% if movie.translated.wikipedia_page %}
+            <li><a href="{{ movie.translated.wikipedia_url }}" target="_blank" rel="nofollow">{% trans "Wikipedia" %}</a></li>
             {% endif %}
         </ul>
         {% if user.is_authenticated %}

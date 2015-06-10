@@ -1,0 +1,7 @@
+{% if movie.translated.poster.image %}
+<img src="{{ movie.translated.poster.image.url }}" class="poster-content"/>
+{% else %}
+<span class="poster-content fake-poster">
+    <span>{{ movie.translated.title }}</span>
+</span>
+{% endif %}

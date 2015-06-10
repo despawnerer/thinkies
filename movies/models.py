@@ -1,11 +1,11 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 from django.utils.translation import get_language
 from django.contrib.postgres.fields import ArrayField
 
 from thinkies.utils import get_hashed_file_upload_path
+from .utils import lens
 
 
 class Movie(models.Model):
@@ -24,11 +24,12 @@ class Movie(models.Model):
     last_rating_update = models.DateTimeField(null=True)
 
     def __str__(self):
-        return _("{title} ({year})").format(title=self.translated_title,
+        return _("{title} ({year})").format(title=self.translated.title,
                                             year=self.year)
 
-    def get_absolute_url(self):
-        return reverse('movies:movie', kwargs={'pk': self.pk})
+    @lens
+    def translated(self):
+        return self.localizations_by_language.get(get_language())
 
     @property
     def imdb_url(self):
@@ -42,16 +43,6 @@ class Movie(models.Model):
         else:
             return self.year < today.year
 
-    @property
-    def translated_title(self):
-        if self.localization:
-            return self.localization.title or self.title
-        else:
-            return self.title
-
-    @property
-    def localization(self):
-        return self.localizations_by_language.get(get_language())
 
     @property
     def localizations_by_language(self):
@@ -75,6 +66,11 @@ class Localization(models.Model):
 
     def __str__(self):
         return '%s (%s)' % (self.title, self.language)
+
+    @property
+    def wikipedia_url(self):
+        return '//{}.wikipedia.org/wiki/{}'.format(
+            self.language, self.wikipedia_page)
 
 
 class Poster(models.Model):
