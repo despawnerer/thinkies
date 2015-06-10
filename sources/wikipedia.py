@@ -3,6 +3,7 @@ import logging
 import os
 import posixpath
 import feedparser
+import dateutil.parser
 from lxml import etree
 from urllib.parse import urlparse
 
@@ -92,11 +93,14 @@ def load_dump(filename):
 
 def parse_dump(f):
     for page_element in _yield_xml_elements(f, 'page'):
+        revision_element = page_element.find('{*}revision')
         yield {
             'title': page_element.find('{*}title').text,
             'id': page_element.find('{*}id').text,
             'revision': {
-                'text': page_element.find('{*}revision').find('{*}text').text
+                'text': revision_element.find('{*}text').text,
+                'timestamp': dateutil.parser.parse(
+                    revision_element.find('{*}timestamp').text),
             }
         }
 
