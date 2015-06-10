@@ -1,9 +1,13 @@
+from funcy import cached_property
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language
 from django.contrib.postgres.fields import ArrayField
+from django.utils.timezone import now
 
-from thinkies.utils import get_hashed_file_upload_path
+from thinkies.utils import load_url, get_hashed_file_upload_path
+
 from .utils import lens
 
 
@@ -67,13 +71,30 @@ class Poster(models.Model):
     source_url = models.URLField(null=True)
     source_updated = models.DateTimeField(null=True)
 
-    image = models.ImageField(
+    local_image = models.ImageField(
         null=True, width_field='width', height_field='height',
         upload_to=get_hashed_file_upload_path)
-    image_updated = models.DateTimeField(null=True)
+    local_image_updated = models.DateTimeField(null=True)
 
     width = models.PositiveIntegerField(null=True)
     height = models.PositiveIntegerField(null=True)
+
+    @cached_property
+    def image(self):
+        if self.source_url and not self.is_local_image_up_to_date():
+            # FIXME: this is fully blocking, la la la
+            self.local_image = load_url(
+                self.source_url, 'poster_{}'.format(self.pk))
+            self.local_image_updated = now()
+            self.save(update_fields=['local_image', 'local_image_updated',
+                                     'width', 'height'])
+
+        return self.local_image
+
+    def is_local_image_up_to_date(self):
+        return (
+            self.local_image_updated
+            and self.local_image_updated >= self.source_updated)
 
 
 class TheatricalDay(models.Model):
