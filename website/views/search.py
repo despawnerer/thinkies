@@ -4,8 +4,7 @@ from django.views.generic import ListView
 from django.db.models import Prefetch
 from django.utils.translation import get_language
 
-from langdetect import detect as detect_language
-from langdetect.lang_detect_exception import LangDetectException
+from thinkies.utils import detect_language
 
 from movies.models import Movie, Localization
 from movies.consts import SEARCHABLE_LANGUAGES
@@ -51,13 +50,9 @@ class SearchView(ListView):
         current_language = get_language()
 
         languages = [current_language]
-        try:
-            detected_language = detect_language(query)
-            if (detected_language in SEARCHABLE_LANGUAGES
-                    and detected_language != current_language):
-                languages.append(detected_language)
-        except LangDetectException:
-            # TODO: log these?
-            pass
+        detected_language = detect_language(query)
+        if (detected_language in SEARCHABLE_LANGUAGES
+                and detected_language != current_language):
+            languages.append(detected_language)
 
         return search.find(query, languages)[:20]
