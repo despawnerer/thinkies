@@ -6,6 +6,7 @@ import feedparser
 import dateutil.parser
 from lxml import etree
 from urllib.parse import urlparse
+from functools import lru_cache
 
 from pymongo import MongoClient
 
@@ -17,11 +18,14 @@ from .utils import download
 logger = logging.getLogger(__name__)
 
 
+client = MongoClient(
+    host=getattr(settings, 'WIKIPEDIA_MONGO_HOST', None),
+    port=getattr(settings, 'WIKIPEDIA_MONGO_PORT', None))
+db = client[settings.WIKIPEDIA_MONGO_DATABASE]
+
+
+@lru_cache()
 def get_collection(language):
-    client = MongoClient(
-        host=getattr(settings, 'WIKIPEDIA_MONGO_HOST', None),
-        port=getattr(settings, 'WIKIPEDIA_MONGO_PORT', None))
-    db = client[settings.WIKIPEDIA_MONGO_DATABASE]
     collection = db['%swiki' % language]
     collection.ensure_index('id', unique=True)
     collection.ensure_index('title', unique=True)
