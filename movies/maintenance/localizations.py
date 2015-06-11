@@ -1,13 +1,11 @@
 import logging
 import re
-from langdetect import detect as detect_language
-from langdetect.lang_detect_exception import LangDetectException
 from funcy import concat
 from itertools import product
 
 from django.db import transaction
 
-from thinkies.utils import get_md5
+from thinkies.utils import get_md5, detect_language
 
 from sources import wikidata, wikipedia
 
@@ -167,11 +165,8 @@ def choose_title(wikipedia_page, label, language):
     elif not label:
         return wikipedia_page
 
-    try:
-        wikipedia_page_language = detect_language(wikipedia_page)
-        label_language = detect_language(label)
-    except LangDetectException:
-        return wikipedia_page
+    wikipedia_page_language = detect_language(wikipedia_page)
+    label_language = detect_language(label)
 
     if wikipedia_page_language == label_language:
         return wikipedia_page

@@ -1,5 +1,7 @@
 import hashlib
 from urllib.request import urlopen
+from langdetect import detect as _detect_language
+from langdetect.lang_detect_exception import LangDetectException
 
 from django.core.files.base import ContentFile
 
@@ -25,3 +27,10 @@ def load_url(url, name):
 
 def get_md5(s):
     return hashlib.md5(s.encode('utf-8')).hexdigest()
+
+
+def detect_language(s):
+    try:
+        return _detect_language(s)
+    except LangDetectException:
+        return None
