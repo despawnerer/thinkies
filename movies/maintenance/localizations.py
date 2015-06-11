@@ -76,10 +76,10 @@ def get_movie_items():
     results = collection.find({
         'claims.P31.mainsnak.datavalue.value': {'$in': FILM_TYPE_REFERENCES},
         'claims.P345.mainsnak.datavalue.value': {'$exists': True},
-    }, fields=[
+    }, projection=[
         'labels', 'descriptions', 'aliases', 'sitelinks',
         'claims.P345.mainsnak.datavalue'
-    ], timeout=False)
+    ])
 
     return map(wikidata.Item, results)
 
