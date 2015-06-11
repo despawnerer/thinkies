@@ -1,7 +1,6 @@
 import hashlib
 from urllib.request import urlopen
-from langdetect import detect as _detect_language
-from langdetect.lang_detect_exception import LangDetectException
+from pycld2 import detect as _detect_language
 
 from django.core.files.base import ContentFile
 
@@ -30,7 +29,10 @@ def get_md5(s):
 
 
 def detect_language(s):
-    try:
-        return _detect_language(s)
-    except LangDetectException:
+    is_reliable, text_bytes, results = _detect_language(
+        s, isPlainText=True, bestEffort=True)
+    language_name, language_code, percent, score = results[0]
+    if is_reliable:
+        return language_code
+    else:
         return None
