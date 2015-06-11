@@ -56,6 +56,8 @@ clean_title_re = re.compile(
     r'(?:(?:film|фильм|мультфильм|аниме).{0,2}\d{4})'
     r')\)$')
 
+filename_re = re.compile(r'[=:]\s*(.+\.(?:jpg|png))')
+
 
 # overall process
 
@@ -205,13 +207,9 @@ def get_poster_source(page_title, language):
     if not movie_page:
         return None
 
-    # find the poster's filename on the page
-    # the intuition here is that it's probably gonna be the first image
-    text = movie_page.get('revision', {}).get('text', '')
-    found_filenames = re.findall(r'[=:]\s*(.+\.(?:jpg|png))', text)
-    if len(found_filenames) == 0:
+    filename = _find_poster_filename(movie_page)
+    if not filename:
         return None
-    filename = found_filenames[0]
 
     # get the time of the last update of the file
     file_page_title = FILE_PAGE_TITLE_FORMATS.get(
@@ -228,3 +226,16 @@ def get_poster_source(page_title, language):
         language, hashed_filename[0], hashed_filename[:2], sane_filename)
 
     return file_url, file_updated
+
+
+def _find_poster_filename(page):
+    """
+    Find the poster's filename on the page
+    The intuition here is that it's probably gonna be the first image
+    """
+    text = page.get('revision', {}).get('text', '')
+    match = filename_re.search(text)
+    if match:
+        return match.group(1)
+    else:
+        return None
