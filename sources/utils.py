@@ -14,7 +14,7 @@ def download(url, filename):
         tfp = open(filename, 'wb')
         with tfp:
             result = filename, headers
-            bs = 1024*8
+            bs = 1024*8*100
             size = -1
             read = 0
             blocknum = 0
@@ -28,6 +28,7 @@ def download(url, filename):
                 read += len(block)
                 tfp.write(block)
                 blocknum += 1
+
                 logger.info("Downloaded {}/{}".format(
                     format_filesize(read),
                     format_filesize(size)))
