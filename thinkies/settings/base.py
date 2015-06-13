@@ -191,6 +191,13 @@ WIKIPEDIA_MONGO_DATABASE = 'wikipedia'
 OMDB_DATA_DIR = os.path.join(DATA_DIR, 'omdb')
 
 
+BROKER_URL = 'redis://'
+CELERY_RESULT_BACKEND = 'redis://'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'thinkies.search.engines.ConfigurableElasticEngine',
