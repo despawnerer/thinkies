@@ -2,6 +2,7 @@ import logging
 import re
 from funcy import concat
 from itertools import product
+from urllib.parse import quote
 
 from django.db import transaction
 
@@ -218,7 +219,8 @@ def get_poster_source(page_title, language):
     sane_filename = filename.replace(' ', '_')
     hashed_filename = get_md5(sane_filename)
     file_url = 'https://upload.wikimedia.org/wikipedia/{0}/{1}/{2}/{3}'.format(
-        language, hashed_filename[0], hashed_filename[:2], sane_filename)
+        language, hashed_filename[0], hashed_filename[:2],
+        quote(sane_filename))
 
     return file_url, file_updated
 
