@@ -69,7 +69,7 @@ class Localization(models.Model):
 
 
 class Poster(models.Model):
-    source_url = models.URLField(null=True)
+    source_url = models.URLField(null=True, max_length=2048)
     source_updated = models.DateTimeField(null=True)
 
     local_image = models.ImageField(
@@ -79,6 +79,10 @@ class Poster(models.Model):
 
     width = models.PositiveIntegerField(null=True)
     height = models.PositiveIntegerField(null=True)
+
+    @property
+    def aspect_ratio(self):
+        return self.width / self.height
 
     @cached_property
     def image(self):
