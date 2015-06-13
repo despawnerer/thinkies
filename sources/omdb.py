@@ -56,6 +56,10 @@ class Item:
     def released(self):
         return self.get_date('Released')
 
+    @cached_property
+    def poster(self):
+        return self.get('Poster', None)
+
     # imdb data
 
     @cached_property
@@ -80,7 +84,8 @@ class Item:
 
     @cached_property
     def type(self):
-        return self.data['Type']
+        # assume lack of type column to mean 'movie'
+        return self.get('Type', 'movie')
 
     # helpers
 
@@ -93,7 +98,7 @@ class Item:
 
     def get(self, key, default=None):
         value = self.data.get(key, default)
-        if value == 'N/A':
+        if value in ['N/A', '']:
             return default
         else:
             return value

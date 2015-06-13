@@ -1,9 +1,14 @@
+from funcy import cached_property
+
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 from django.utils.translation import get_language
 from django.contrib.postgres.fields import ArrayField
+from django.utils.timezone import now
+
+from thinkies.utils import load_url, get_hashed_file_upload_path
+
+from .utils import lens
 
 
 class Movie(models.Model):
@@ -11,7 +16,8 @@ class Movie(models.Model):
     year = models.IntegerField()
     mpaa_rating = models.CharField(max_length=24)
     release_date = models.DateField(null=True)
-    poster = models.ImageField(null=True)
+    poster = models.OneToOneField(
+        'Poster', null=True, on_delete=models.SET_NULL)
 
     imdb_id = models.CharField(max_length=50, unique=True)
     imdb_rating = models.FloatField(null=True)
@@ -21,34 +27,16 @@ class Movie(models.Model):
     last_rating_update = models.DateTimeField(null=True)
 
     def __str__(self):
-        return _("{title} ({year})").format(title=self.translated_title,
+        return _("{title} ({year})").format(title=self.translated.title,
                                             year=self.year)
 
-    def get_absolute_url(self):
-        return reverse('movies:movie', kwargs={'pk': self.pk})
+    @lens
+    def translated(self):
+        return self.localizations_by_language.get(get_language())
 
     @property
     def imdb_url(self):
-        return 'http://www.imdb.com/title/%s' % self.imdb_id
-
-    @property
-    def is_released(self):
-        today = timezone.now().date()
-        if self.release_date:
-            return self.release_date <= today
-        else:
-            return self.year < today.year
-
-    @property
-    def translated_title(self):
-        if self.localization:
-            return self.localization.title or self.title
-        else:
-            return self.title
-
-    @property
-    def localization(self):
-        return self.localizations_by_language.get(get_language())
+        return '//www.imdb.com/title/%s' % self.imdb_id
 
     @property
     def localizations_by_language(self):
@@ -64,7 +52,8 @@ class Localization(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     aliases = ArrayField(models.CharField(max_length=255), default=[])
-    poster = models.ImageField(null=True)
+    poster = models.OneToOneField(
+        'Poster', null=True, on_delete=models.SET_NULL)
     wikipedia_page = models.CharField(max_length=1024)
 
     class Meta:
@@ -72,6 +61,45 @@ class Localization(models.Model):
 
     def __str__(self):
         return '%s (%s)' % (self.title, self.language)
+
+    @property
+    def wikipedia_url(self):
+        return '//{}.wikipedia.org/wiki/{}'.format(
+            self.language, self.wikipedia_page)
+
+
+class Poster(models.Model):
+    source_url = models.URLField(null=True, max_length=2048)
+    source_updated = models.DateTimeField(null=True)
+
+    local_image = models.ImageField(
+        null=True, width_field='width', height_field='height',
+        upload_to=get_hashed_file_upload_path)
+    local_image_updated = models.DateTimeField(null=True)
+
+    width = models.PositiveIntegerField(null=True)
+    height = models.PositiveIntegerField(null=True)
+
+    @property
+    def aspect_ratio(self):
+        return self.width / self.height
+
+    @cached_property
+    def image(self):
+        if self.source_url and not self.is_local_image_up_to_date():
+            # FIXME: this is fully blocking, la la la
+            self.local_image = load_url(
+                self.source_url, 'poster_{}'.format(self.pk))
+            self.local_image_updated = now()
+            self.save(update_fields=['local_image', 'local_image_updated',
+                                     'width', 'height'])
+
+        return self.local_image
+
+    def is_local_image_up_to_date(self):
+        return (
+            self.local_image_updated
+            and self.local_image_updated >= self.source_updated)
 
 
 class TheatricalDay(models.Model):

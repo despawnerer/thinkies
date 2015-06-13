@@ -2,18 +2,12 @@
 <div class="search-result">
     <div class="poster-box">
         <a href="{% url 'site:movie' pk=movie.pk %}" class="poster">
-            {% if movie.poster %}
-            <img src="{{ movie.poster.url }}" class="poster-content"/>
-            {% else %}
-            <span class="poster-content fake-poster">
-                <span>{{ movie.translated_title }}</span>
-            </span>
-            {% endif %}
+            {% include 'details/poster_content.html' with movie=movie %}
         </a>
     </div>
     <div>
         <a href="{% url 'site:movie' pk=movie.pk %}">
-            {{ movie.translated_title }}
+            {{ movie.translated.title }}
         </a>
 
         <ul class="movie-info">
@@ -22,8 +16,8 @@
             <li>{{ movie.mpaa_rating }}</li>
             {% endif %}
             <li><a href="{{ movie.imdb_url }}" target="_blank" rel="nofollow">IMDb{% if movie.imdb_rating %} {{ movie.imdb_rating }}{% endif %}</a></li>
-            {% if movie.localization.wikipedia_page %}
-            <li><a href="//{{ movie.localization.language }}.wikipedia.org/wiki/{{ movie.localization.wikipedia_page }}" target="_blank" rel="nofollow">{% trans "Wikipedia" %}</a></li>
+            {% if movie.translated.wikipedia_page %}
+            <li><a href="{{ movie.translated.wikipedia_url }}" target="_blank" rel="nofollow">{% trans "Wikipedia" %}</a></li>
             {% endif %}
         </ul>
     </div>
