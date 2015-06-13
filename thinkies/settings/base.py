@@ -14,6 +14,12 @@ SECRET_KEY = '8#o_-qrj3k8w^-2ww81u$+w7zu6@3re#r$(q=$3t=@clo54)ev'
 DEBUG = False
 ALLOWED_HOSTS = []
 
+SILENCED_SYSTEM_CHECKS = [
+    # "username field is not unique", referring to our email field
+    # it's safe to ignore because we don't use emails to auth
+    'auth.W004',
+]
+
 
 INSTALLED_APPS = (
     'django.contrib.auth',
