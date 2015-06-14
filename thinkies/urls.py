@@ -10,7 +10,6 @@ urlpatterns = [
     url(r'^auth/', include(
         'social.apps.django_app.urls', namespace='social')),
 
-    url(r'^api/', include('api.urls', namespace='api')),
     url(r'^', include('website.urls', namespace='site')),
 ]
 
