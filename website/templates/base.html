@@ -7,8 +7,7 @@
 
     <link href='//fonts.googleapis.com/css?family=RobotoDraft:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang={{ LANGUAGE_CODE }}' rel='stylesheet' type='text/css'>
 
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <link rel="stylesheet" href="{% static 'css/icons.css' %}">
+    {% assets 'main_css' %}<link href="{{ ASSET_URL }}" rel="stylesheet" type="text/css"/>{% endassets %}
 </head>
 
 <body>
@@ -40,8 +39,6 @@
         </footer>
     </div>
 
-    {% assets 'bundle' %}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-    {% endassets %}
+    {% assets 'main_js' %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
 </body>
 </html>

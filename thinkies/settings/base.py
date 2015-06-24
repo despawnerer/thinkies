@@ -157,6 +157,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 BROWSERIFY_BIN = os.path.join(NODE_BIN_DIR, 'browserify')
 
+POSTCSS_BIN = os.path.join(NODE_BIN_DIR, 'postcss')
+POSTCSS_PLUGINS = [
+    'postcss-import',
+    'autoprefixer',
+    'cssnano',
+]
+
 
 GEOIP_PATH = os.path.join(DATA_DIR, 'geoip')
 GEOIP_CITY = 'GeoLite2-City.mmdb'
