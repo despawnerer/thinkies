@@ -98,7 +98,7 @@ class Poster(models.Model):
 
     def is_local_image_up_to_date(self):
         return (
-            self.local_image_updated
+            self.local_image_updated and self.source_updated
             and self.local_image_updated >= self.source_updated)
 
 
