@@ -14,7 +14,7 @@ from movies.consts import THEATRICAL_RUN_LOCATIONS
 
 
 class Index(ListView):
-    template_name = 'pages/index.html'
+    template_name = 'pages/index.jinja2'
     context_object_name = 'movie_list'
 
     def get_queryset(self):

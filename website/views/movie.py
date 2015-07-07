@@ -13,7 +13,7 @@ from ..forms.tip import TipForm
 
 class MovieView(DetailView):
     model = Movie
-    template_name = 'pages/movie.html'
+    template_name = 'pages/movie.jinja2'
 
     def get(self, request, **kwargs):
         self.object = self.get_object()

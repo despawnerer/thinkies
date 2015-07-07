@@ -7,7 +7,7 @@ from .mixins import PrivateViewMixin
 
 
 class SettingsView(PrivateViewMixin, UpdateView):
-    template_name = 'pages/settings.html'
+    template_name = 'pages/settings.jinja2'
     form_class = SettingsForm
     success_url = reverse_lazy('site:settings')
 

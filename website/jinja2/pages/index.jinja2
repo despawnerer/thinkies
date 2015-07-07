@@ -1,12 +1,10 @@
-{% extends 'base.html' %}
-
-{% load i18n %}
+{% extends 'base.jinja2' %}
 
 {% block content %}
 <ul id="index-movie-list">
     {% for movie in movie_list %}
         <li>
-            {% include 'elements/index_movie.html' %}
+            {% include 'elements/index_movie.jinja2' %}
         </li>
     {% endfor %}
 </ul>
