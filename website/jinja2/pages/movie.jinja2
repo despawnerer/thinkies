@@ -1,16 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'base.jinja2' %}
 
-{% load i18n %}
+{% from 'details.jinja2' import poster %}
+{% from 'utils.jinja2' import csrf_input, page_title %}
 
-{% block title %}{% blocktrans with title=movie.translated.title %}{{ title }} — Thinkies{% endblocktrans %}{% endblock %}
+{% block title %}{{ page_title(movie.translated.title) }}{% endblock %}
 
 {% block content %}
 <article id="movie">
-    <div class="poster-box">
-        <div class="poster" style="width: 100%;">
-            {% include 'details/poster_content.html' with movie=movie %}
-        </div>
-    </div>
+    <div class="poster-box">{{ poster(movie) }}</div>
     <div style="flex: 1">
         <h1>{{ movie.translated.title }}</h1>
         <ul class="movie-info">
@@ -20,17 +17,19 @@
             {% endif %}
             <li><a href="{{ movie.imdb_url }}" target="_blank" rel="nofollow">IMDb{% if movie.imdb_rating %} {{ movie.imdb_rating }}{% endif %}</a></li>
             {% if movie.translated.wikipedia_page %}
-            <li><a href="{{ movie.translated.wikipedia_url }}" target="_blank" rel="nofollow">{% trans "Wikipedia" %}</a></li>
+            <li><a href="{{ movie.translated.wikipedia_url }}" target="_blank" rel="nofollow">{{ _("Wikipedia") }}</a></li>
             {% endif %}
         </ul>
-        {% if user.is_authenticated %}
+
+        {% if request.user.is_authenticated() %}
         <form action="." method="post" class="tip-form">
-            {% csrf_token %}
-            <span class="user-picture"><img src="{{ user.default_identity.image.url }}"/></span>
+            {{ csrf_input(csrf_token) }}
+            <span class="user-picture"><img src="{{ request.user.default_identity.image.url }}"/></span>
             {{ tip_form.text }}
-            <button class="button">{% trans "Post" %}</button>
+            <button class="button">{{ _("Post") }}</button>
         </form>
         {% endif %}
+
         <ul class="tip-list">
         {% for tip in tip_list %}
             <li class="tip">

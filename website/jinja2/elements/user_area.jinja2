@@ -1,0 +1,42 @@
+{% if request.user.is_authenticated() %}
+<div id="user-dropdown-box">
+    <a href="#" id="user-dropdown-toggle" data-toggle=".user-area-dropdown">
+        <span class="user-picture">
+            <img src="{{ request.user.default_identity.image.url }}" alt="{{ request.user.default_identity.name }}"/>
+        </span>
+    </a>
+    <nav class="user-area-dropdown" hidden>
+        <div id="user-dropdown-name">
+            {{ request.user.default_identity.name }}
+        </div>
+        <ul class="user-nav-list">
+            <li>
+                <a href="{{ reverse('site:settings') }}">{{ _("Settings") }}</a>
+            </li>
+            <li>
+                <a href="{{ reverse('logout') }}?next={% if not is_on_private_page %}{{ request.get_full_path()|urlencode }}{% else %}/{% endif %}">
+                    {{ _("Log out") }}
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+{% else %}
+<div id="login-dropdown-box">
+    <a href="#" class="button" data-toggle=".user-area-dropdown">
+        {{ _("Log in") }}
+    </a>
+    <nav class="user-area-dropdown" hidden>
+        <ul class="login-nav-list">
+        {% for provider in get_auth_providers(request.user) %}
+            <li>
+                <a href="{{ reverse('social:begin', kwargs={'backend': provider.backend_name}) }}?next={{ request.get_full_path()|urlencode }}" class="button brand-button {{ provider.name }}">
+                    <span class="icon-{{ provider.name }} brand-icon"></span>
+                {{ _("Log in with {}").format(provider.verbose_name) }}
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+    </nav>
+</div>
+{% endif %}

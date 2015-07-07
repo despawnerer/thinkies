@@ -17,7 +17,7 @@ from users.actions import get_friends
 
 class SearchView(ListView):
     context_object_name = 'movie_list'
-    template_name = 'pages/search.html'
+    template_name = 'pages/search.jinja2'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -1,0 +1,7 @@
+{% macro csrf_input(token) -%}
+	<input type="hidden" name="csrfmiddlewaretoken" value="{{ token }}"/>
+{% endmacro %}
+
+{% macro page_title(title) -%}
+	{{ _("{} — Thinkies").format(title) }}
+{% endmacro %}

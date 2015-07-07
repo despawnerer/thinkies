@@ -1,9 +1,0 @@
-<div class="poster-content">
-	{% if movie.translated.poster.image %}
-	<img src="{{ movie.translated.poster.image.url }}" class="poster-image {% if movie.translated.poster.aspect_ratio > 0.66 %}wider{% else %}taller{% endif %}"/>
-	{% else %}
-	<span class="fake-poster">
-	    <span>{{ movie.translated.title }}</span>
-	</span>
-	{% endif %}
-</div>

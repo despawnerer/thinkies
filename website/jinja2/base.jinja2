@@ -1,11 +1,12 @@
-{% load staticfiles i18n assets %}<!doctype html>
-<html lang="{{ LANGUAGE_CODE }}">
+<!doctype html>
+{% set language = get_language() %}
+<html lang="{{ language }}">
 <head>
-    <title>{% block title %}{% trans 'Thinkies' %}{% endblock %}</title>
+    <title>{% block title %}{{ _("Thinkies") }}{% endblock %}</title>
 
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <link href='//fonts.googleapis.com/css?family=RobotoDraft:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang={{ LANGUAGE_CODE }}' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=RobotoDraft:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang={{ language }}' rel='stylesheet' type='text/css'>
 
     {% assets 'main_css' %}<link href="{{ ASSET_URL }}" rel="stylesheet" type="text/css"/>{% endassets %}
 </head>
@@ -14,18 +15,18 @@
     <div id="main-container">
         <header id="main-toolbar">
             <div id="logo-area">
-                <a href="{% url 'site:index' %}" id="logo">{% trans 'Thinkies' %}</a>
-                {% include 'elements/language_chooser.html' %}
+                <a href="{{ reverse('site:index') }}" id="logo">{{ _("Thinkies") }}</a>
+                {% include 'elements/language_chooser.jinja2' %}
             </div>
             <div id="user-area">
-                {% include 'elements/user_area.html' %}
+                {% include 'elements/user_area.jinja2' %}
             </div>
         </header>
 
         {% block search %}
-        <form action="{% url 'site:search' %}" method="get" id="search">
+        <form action="{{ reverse('site:search') }}" method="get" id="search">
             <span class="icon-search"></span>
-            <input type="text" placeholder="{% trans "Search for movies" %}" value="{% block search_query %}{% endblock %}" name="q"/>
+            <input type="text" placeholder="{{ _("Search for movies") }}" value="{% block search_query %}{% endblock %}" name="q"/>
         </form>
         {% endblock %}
 
@@ -35,7 +36,7 @@
 
         <footer id="footer">
             <span class="heart">❤</span>
-            {% blocktrans %}Made with love in St. Petersburg, 2015.{% endblocktrans %}
+            {{ _("Made with love in St. Petersburg, 2015.") }}
         </footer>
     </div>
 

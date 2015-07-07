@@ -1,13 +1,11 @@
-{% load i18n %}
+{% from 'details.jinja2' import poster %}
 <div class="movie-card">
     <div class="poster-box">
-        <a href="{% url 'site:movie' pk=movie.pk %}" class="poster">
-            {% include 'details/poster_content.html' with movie=movie %}
-        </a>
+        {{ poster(movie, link=True) }}
     </div>
     <div>
         <h2>
-            <a href="{% url 'site:movie' pk=movie.pk %}">
+            <a href="{{ reverse('site:movie', kwargs={'pk': movie.pk}) }}">
                 {{ movie.translated.title }}
             </a>
         </h2>
@@ -19,7 +17,7 @@
             {% endif %}
             <li><a href="{{ movie.imdb_url }}" target="_blank" rel="nofollow">IMDb{% if movie.imdb_rating %} {{ movie.imdb_rating }}{% endif %}</a></li>
             {% if movie.translated.wikipedia_page %}
-            <li><a href="{{ movie.translated.wikipedia_url }}" target="_blank" rel="nofollow">{% trans "Wikipedia" %}</a></li>
+            <li><a href="{{ movie.translated.wikipedia_url }}" target="_blank" rel="nofollow">{{ _("Wikipedia") }}</a></li>
             {% endif %}
         </ul>
     </div>
