@@ -1,5 +1,5 @@
 {% macro poster(movie, link=False) -%}
-    {% if link %}<a href="{{ reverse('site:movie', kwargs={'pk': movie.pk}) }}" class="poster">{% else %}<div class="poster">{% endif %}
+    {% if link %}<a href="{{ url('site:movie', pk=movie.pk) }}" class="poster">{% else %}<div class="poster">{% endif %}
     <div class="poster-content">
         {% if movie.translated.poster.image %}
         <img src="{{ movie.translated.poster.image.url }}" class="poster-image {% if movie.translated.poster.aspect_ratio > 0.66 %}wider{% else %}taller{% endif %}"/>

@@ -15,7 +15,7 @@
     <div id="main-container">
         <header id="main-toolbar">
             <div id="logo-area">
-                <a href="{{ reverse('site:index') }}" id="logo">{{ _("Thinkies") }}</a>
+                <a href="{{ url('site:index') }}" id="logo">{{ _("Thinkies") }}</a>
                 {% include 'elements/language_chooser.jinja2' %}
             </div>
             <div id="user-area">
@@ -24,7 +24,7 @@
         </header>
 
         {% block search %}
-        <form action="{{ reverse('site:search') }}" method="get" id="search">
+        <form action="{{ url('site:search') }}" method="get" id="search">
             <span class="icon-search"></span>
             <input type="text" placeholder="{{ _("Search for movies") }}" value="{% block search_query %}{% endblock %}" name="q"/>
         </form>

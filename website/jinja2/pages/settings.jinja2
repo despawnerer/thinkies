@@ -43,12 +43,12 @@
             <li>
                 {% if not provider.is_associated %}
                     <label class="account-label">{{ provider.verbose_name }}</label>
-                    <a href="{{ reverse('social:begin', kwargs={'backend': provider.backend_name}) }}?next={{ request.get_full_path()|urlencode }}" class="button brand-button {{ provider.backend_name }}">
+                    <a href="{{ url('social:begin', backend=provider.backend_name) }}?next={{ request.get_full_path()|urlencode }}" class="button brand-button {{ provider.backend_name }}">
                         <span class="brand-icon icon-{{ provider.name }}"></span>
                         {{ _("Connect") }}
                     </a>
                 {% elif identities|length > 1 %}
-                    <form action="{{ reverse('social:disconnect', kwargs={'backend': provider.backend_name}) }}" method="post">
+                    <form action="{{ url('social:disconnect', backend=provider.backend_name) }}" method="post">
                         {{ csrf_input(csrf_token) }}
                         <input type="hidden" name="next" value="{{ request.get_full_path() }}"/>
                         <label class="account-label">{{ provider.verbose_name }}</label>

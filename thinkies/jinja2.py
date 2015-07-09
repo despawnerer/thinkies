@@ -18,7 +18,7 @@ def environment(**options):
     env.globals.update({
         'settings': settings,
         'static': staticfiles_storage.url,
-        'reverse': reverse,
+        'url': url,
 
         'get_language': translation.get_language,
         '_': translation.ugettext,
@@ -26,3 +26,7 @@ def environment(**options):
         'get_auth_providers': get_auth_providers,
     })
     return env
+
+
+def url(view_name, *args, **kwargs):
+    return reverse(view_name, args=args, kwargs=kwargs)

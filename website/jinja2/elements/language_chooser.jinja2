@@ -1,6 +1,6 @@
 {% set current_language = get_language() %}
 {% from 'utils.jinja2' import csrf_input %}
-<form action="{{ reverse('set_language') }}" method="post" id="language-chooser">
+<form action="{{ url('set_language') }}" method="post" id="language-chooser">
     {{ csrf_input(csrf_token) }}
     <input type="hidden" name="next" value="{{ request.get_full_path() }}"/>
     <select name="language" onchange="this.form.submit();">

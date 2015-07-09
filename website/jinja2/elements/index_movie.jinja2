@@ -5,7 +5,7 @@
     </div>
     <div>
         <h2>
-            <a href="{{ reverse('site:movie', kwargs={'pk': movie.pk}) }}">
+            <a href="{{ url('site:movie', pk=movie.pk) }}">
                 {{ movie.translated.title }}
             </a>
         </h2>
