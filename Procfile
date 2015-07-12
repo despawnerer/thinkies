@@ -1,2 +1,2 @@
-web: PYTHONUNBUFFERED=true python manage.py runserver
-celery: PYTHONUNBUFFERED=true celery -A thinkies worker -B -l info
+web: python manage.py runserver
+celery: celery -A thinkies worker -B -l info
