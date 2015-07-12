@@ -1,0 +1,3 @@
+from .update_theatrical_days import UpdateTheatricalDaysTask
+from .update_movies import UpdateMoviesTask
+from .update_localizations import UpdateLocalizationsTask
